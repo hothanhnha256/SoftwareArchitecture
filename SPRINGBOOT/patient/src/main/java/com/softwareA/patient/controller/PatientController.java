@@ -1,5 +1,6 @@
 package com.softwareA.patient.controller;
 
+import com.softwareA.patient.dto.request.PatientSearchRequest;
 import com.softwareA.patient.dto.response.ApiResponse;
 import com.softwareA.patient.dto.response.PatientResponse;
 import com.softwareA.patient.dto.response.PatientsResponse;
@@ -9,10 +10,7 @@ import com.softwareA.patient.model.Patient;
 import com.softwareA.patient.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,9 +25,10 @@ public class PatientController {
 
     // FIND PATIENT BY NAME, CITIZEN ID, HEALTH INSURANCE NUM, database ID, phoneNumber
     @GetMapping
-    public ApiResponse<PatientsResponse> getAllPatients() {
+    public ApiResponse<PatientsResponse> getAllPatients(PatientSearchRequest request) {
         //TODO: add filter condition here
-        List<Patient> patients = patientService.getAllPatients();
+        System.out.print(request.toString());
+        List<Patient> patients = patientService.getAllPatients(request);
         PatientsResponse response = PatientsResponse.builder().limit(10).page(1).total(10).patients(patients).build();
         return ApiResponse.<PatientsResponse>builder().result(response).build();
     }
