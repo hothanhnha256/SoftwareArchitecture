@@ -4,10 +4,10 @@ server:
     context-path: /identity
 spring:
   datasource:
-    url: "jdbc:mysql://localhost:3306/bookteria_identity"
-    driverClassName: "com.mysql.cj.jdbc.Driver"
-    username: root
-    password: nhahothanh2564.
+    url: "jdbc:postgresql://localhost:5433/identity_db"
+    driverClassName: "org.postgresql.Driver"
+    username: user
+    password: password
   jpa:
     hibernate:
       ddl-auto: update
