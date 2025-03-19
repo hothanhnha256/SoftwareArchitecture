@@ -24,7 +24,21 @@ services:
       POSTGRES_DB: profile_db
     volumes:
       - profile-postgres:/var/lib/postgresql/data
+  patient-postgres:
+    image: postgres:17
+    container_name: patient-postgres
+    restart: always
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 123345
+      POSTGRES_DB: patient_db
+    volumes:
+      - patient-postgres:/var/lib/postgresql/data
+
 
 volumes:
   identity-postgres:
   profile-postgres:
+  patient-postgres:
