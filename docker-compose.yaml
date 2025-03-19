@@ -29,10 +29,10 @@ services:
     container_name: patient-postgres
     restart: always
     ports:
-      - "5434:5432"
+      - "5440:5432"
     environment:
       POSTGRES_USER: user
-      POSTGRES_PASSWORD: 123345
+      POSTGRES_PASSWORD: 123456
       POSTGRES_DB: patient_db
     volumes:
       - patient-postgres:/var/lib/postgresql/data
