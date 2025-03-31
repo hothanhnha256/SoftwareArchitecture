@@ -1,11 +1,12 @@
 package com.softwareA.patient.dto.request;
 
+import com.softwareA.patient.model.BloodType;
+import com.softwareA.patient.model.Sex;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
@@ -23,7 +24,7 @@ public class CreatePatientDTO {
     LocalDate dob;
 
     @NotNull
-    String sex;
+    Sex sex;
 
     String photoUrl;
 
@@ -35,10 +36,11 @@ public class CreatePatientDTO {
     String email;
 
     String healthInsuranceNumber;
+    @NotNull(message = "address cannot be null")
     String address;
-    String bloodType;
+    BloodType bloodType;
 
-    @NotNull
+    @NotNull(message = "citizenId cannot be null")
     String citizenId;
 
 }
