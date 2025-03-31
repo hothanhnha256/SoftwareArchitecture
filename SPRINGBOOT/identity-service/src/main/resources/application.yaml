@@ -4,10 +4,10 @@ server:
     context-path: /identity
 spring:
   datasource:
-    url: "jdbc:postgresql://localhost:5433/identity_db"
+    url: "jdbc:postgresql://applyscrum-bachkhoaactive.g.aivencloud.com:26872/defaultdb"
     driverClassName: "org.postgresql.Driver"
-    username: user
-    password: password
+    username: avnadmin
+    password: AVNS_M3r0L2izKLsjEy29NN3
   jpa:
     hibernate:
       ddl-auto: update
@@ -15,7 +15,3 @@ spring:
 
 jwt:
   signerKey: "1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"
-
-app:
-  services:
-    profile: http://localhost:8081/profile
