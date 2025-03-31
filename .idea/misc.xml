@@ -4,11 +4,8 @@
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
-        <option value="$PROJECT_DIR$/SPRINGBOOT/api-gateway/pom.xml" />
-        <option value="$PROJECT_DIR$/SPRINGBOOT/identity-service/pom.xml" />
         <option value="$PROJECT_DIR$/SPRINGBOOT/profile-service/pom.xml" />
-        <option value="$PROJECT_DIR$/SPRINGBOOT/patient/pom.xml" />
-        <option value="$PROJECT_DIR$/SPRINGBOOT/schedule/pom.xml" />
+        <option value="$PROJECT_DIR$/SPRINGBOOT/identity-service/pom.xml" />
       </list>
     </option>
   </component>
