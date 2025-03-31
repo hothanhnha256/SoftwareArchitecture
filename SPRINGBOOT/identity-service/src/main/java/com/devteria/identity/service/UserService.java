@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import com.devteria.identity.mapper.ProfileMapper;
-import com.devteria.identity.repository.http_client.ProfileClient;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,7 +36,6 @@ public class UserService {
     UserMapper userMapper;
     ProfileMapper profileMapper;
     PasswordEncoder passwordEncoder;
-    ProfileClient profileClient;
 
     public UserResponse createUser(UserCreationRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) throw new AppException(ErrorCode.USER_EXISTED);
@@ -52,7 +50,6 @@ public class UserService {
         User userSave= userRepository.save(user);
 
         //Mock với Profile Service bằng openfeign
-        profileClient.createProfile(profileMapper.toProfileCreationRequest(request));
 
         return userMapper.toUserResponse(userSave);
     }
