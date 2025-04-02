@@ -17,9 +17,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
+@Builder
 public class Patient {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)  // Auto-generate UUID
+    @GeneratedValue(strategy = GenerationType.UUID) // Auto-generate UUID
     UUID id;
     String lastName;
     @NotNull
@@ -29,7 +30,7 @@ public class Patient {
     @Column(nullable = false)
     LocalDate dob;
     @NotNull
-    @Enumerated(EnumType.STRING)  // Store enum as a string
+    @Enumerated(EnumType.STRING) // Store enum as a string
     @Column(nullable = false)
     Sex sex;
     String photoUrl;
@@ -44,7 +45,7 @@ public class Patient {
 
     String healthInsuranceNumber; // mã số bảo hiểm y tế
     String address;
-    @Enumerated(EnumType.STRING)  // Store enum as a string
+    @Enumerated(EnumType.STRING) // Store enum as a string
     BloodType bloodType;
     @NotNull
     @Column(nullable = false)
@@ -56,7 +57,8 @@ public class Patient {
     @JoinColumn(name = "patientId") // This creates a foreign key in EmergencyContact
     private List<EmergencyContact> emergencyContacts;
 
-//    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JoinColumn(name = "patientId") // This creates a foreign key in EmergencyContact
-//    private MedicalRecord medicalRecord;
+    // @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    // @JoinColumn(name = "patientId") // This creates a foreign key in
+    // EmergencyContact
+    // private MedicalRecord medicalRecord;
 }

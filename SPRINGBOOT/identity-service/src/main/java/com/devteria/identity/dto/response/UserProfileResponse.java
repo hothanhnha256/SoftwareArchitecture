@@ -1,5 +1,6 @@
 package com.devteria.identity.dto.response;
 
+import com.devteria.identity.constant.Roles;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -16,4 +17,5 @@ public class UserProfileResponse {
     String lastName;
     LocalDate birthDate;
     String city;
+    Roles role;
 }

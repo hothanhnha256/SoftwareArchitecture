@@ -1,5 +1,6 @@
 package com.softwareA.patient.dto.request;
 
+import com.softwareA.patient.model.BloodType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -15,8 +16,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdatePatientDTO {
-    @NotNull(message = "patient id is required")
-    UUID id;
     String firstName;
     String lastName;
     LocalDate dob;
@@ -28,6 +27,6 @@ public class UpdatePatientDTO {
     String email;
     String healthInsuranceNumber;
     String address;
-    String bloodType;
+    BloodType bloodType;
     String citizenId;
 }

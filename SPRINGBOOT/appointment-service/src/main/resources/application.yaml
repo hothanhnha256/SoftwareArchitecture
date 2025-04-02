@@ -1,0 +1,32 @@
+server:
+  port: 8901
+  servlet:
+    context-path: /appointment
+spring:
+  datasource:
+    url: "jdbc:postgresql://localhost:5441/appointment_db"
+    driverClassName: "org.postgresql.Driver"
+    username: user
+    password: 123456
+
+  jpa:
+
+    hibernate:
+      ddl-auto: "update"
+    show-sql: true
+
+app:
+  services:
+    appointment: http://localhost:8901/appointment
+
+
+patient-service:
+  url: localhost:8900/patient
+
+staff-service:
+  url: localhost:8901/staff
+
+#  security:
+#    user:
+#      name: admin
+#      password: admin
