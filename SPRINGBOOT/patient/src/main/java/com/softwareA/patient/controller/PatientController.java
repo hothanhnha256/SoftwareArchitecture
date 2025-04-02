@@ -16,6 +16,7 @@ import com.softwareA.patient.service.PatientService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,15 +27,20 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@Slf4j
 public class PatientController {
     private final PatientService patientService;
 
     // FIND PATIENT BY NAME, CITIZEN ID, HEALTH INSURANCE NUM, database ID,
     // phoneNumber
     @GetMapping
-    public ResponseEntity<ApiResponse<PatientsResponse>> getAllPatients(PatientSearchRequest request) {
+    public ResponseEntity<ApiResponse<PatientsResponse>> getAllPatients(PatientSearchRequest request, @RequestHeader("UserId") String UserId, @RequestHeader("UserRole") String Role ) {
         // TODO: add filter condition here
         System.out.print(request.toString());
+        System.out.print(UserId);
+        log.info(request.toString());
+        log.info(UserId);
+        log.info(Role);
         List<Patient> patients = patientService.getAllPatients(request);
         PatientsResponse response = PatientsResponse.builder().limit(10).page(1).total(10).patients(patients).build();
         return ResponseEntity.ok().body(ApiResponse.<PatientsResponse>builder().result(response).build());

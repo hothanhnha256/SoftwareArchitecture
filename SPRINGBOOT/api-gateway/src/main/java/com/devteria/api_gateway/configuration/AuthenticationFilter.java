@@ -1,6 +1,7 @@
 package com.devteria.api_gateway.configuration;
 
 import com.devteria.api_gateway.dto.ApiResponse;
+import com.devteria.api_gateway.dto.response.UserResponse;
 import com.devteria.api_gateway.service.IdentityService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -63,21 +65,32 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
         return identityService.introspect(token).flatMap(introspectResponse -> {
             log.info(introspectResponse.toString());
-            if (introspectResponse.getResult().isValid()){
+            if (introspectResponse.getResult().isValid()) {
                 log.info(introspectResponse.getResult().toString());
-                return chain.filter(exchange);
-            }
-            else {
-                log.info(introspectResponse.getResult().toString());
+                log.info("hjere");
+                return identityService.myinfo(token).flatMap(userResponse -> { // truyền token vào myinfo()
+                    log.info("here man");
+                    if (userResponse.getResult() != null) {
+                        ServerHttpRequest mutatedRequest = exchange.getRequest()
+                                .mutate()
+                                .header("UserId", userResponse.getResult().getId().toString()) // ID của User
+                                .header("UserRole", userResponse.getResult().getRole().toString()) // Truyền lại token
+                                .build();
+
+                        return chain.filter(exchange.mutate().request(mutatedRequest).build());
+                    } else {
+                        return unauthenticated(exchange.getResponse());
+                    }
+                });
+            } else {
                 return unauthenticated(exchange.getResponse());
             }
-        }).onErrorResume(
-                throwable -> {
-                    log.error(throwable.getMessage());
-                    return unauthenticated(exchange.getResponse());
-                }
-        );
+        }).onErrorResume(throwable -> {
+            log.error(throwable.getMessage());
+            return unauthenticated(exchange.getResponse());
+        });
     }
+
 
     @Override
     public int getOrder() {

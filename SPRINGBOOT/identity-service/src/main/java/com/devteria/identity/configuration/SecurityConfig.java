@@ -28,6 +28,7 @@ public class SecurityConfig {
     private static final String[] PUBLIC_ENDPOINTS = {
             //This is for public url
             "/auth/token",
+            "/users/my-info",
             "/users/**",
             "/users",
             "/auth/**"

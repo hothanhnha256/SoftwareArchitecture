@@ -4,10 +4,10 @@ server:
     context-path: /patient
 spring:
   datasource:
-    url: "jdbc:postgresql://localhost:5440/patient_db"
+    url: "jdbc:postgresql://localhost:5432/localhost"
     driverClassName: "org.postgresql.Driver"
-    username: user
-    password: 123456
+    username: postgres
+    password: nhahothanh2564.
 
   jpa:
 
