@@ -13,7 +13,6 @@ public class Prescription {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)  // Auto-generate UUID
     UUID id;
-
     String patientId;
     String doctorId;
     String phamarcistId;

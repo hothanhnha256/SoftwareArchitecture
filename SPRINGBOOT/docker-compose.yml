@@ -1,0 +1,14 @@
+version: '3.9'
+services:
+  dev-db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: nhahothanh2564.
+      POSTGRES_DB: localhost
+    ports:
+      - '5432:5432'
+    networks:
+      - nhahothanh
+networks:
+  nhahothanh:

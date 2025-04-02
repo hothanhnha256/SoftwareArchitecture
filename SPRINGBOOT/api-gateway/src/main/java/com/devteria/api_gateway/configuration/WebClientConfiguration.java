@@ -11,15 +11,16 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 @Configuration
 public class WebClientConfiguration {
     @Bean
-    WebClient webClient() {
+    WebClient webClient(){
         return WebClient.builder()
                 .baseUrl("http://localhost:8080/identity")
                 .build();
     }
 
     @Bean
-    IdentityClient identityClient(WebClient webClient) {
-        HttpServiceProxyFactory httpServiceProxyFactory=HttpServiceProxyFactory.builderFor(WebClientAdapter.create(webClient)).build();
+    IdentityClient identityClient(WebClient webClient){
+        HttpServiceProxyFactory httpServiceProxyFactory = HttpServiceProxyFactory
+                .builderFor(WebClientAdapter.create(webClient)).build();
 
         return httpServiceProxyFactory.createClient(IdentityClient.class);
     }

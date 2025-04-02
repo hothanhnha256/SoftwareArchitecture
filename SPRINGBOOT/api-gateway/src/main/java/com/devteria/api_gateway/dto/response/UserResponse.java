@@ -1,7 +1,6 @@
-package com.devteria.identity.dto.request;
+package com.devteria.api_gateway.dto.response;
 
-import com.devteria.identity.validator.DobConstraint;
-import jakarta.validation.constraints.Size;
+import com.devteria.api_gateway.constant.Roles;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,10 +11,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProfileCreationRequest {
-
+public class UserResponse {
+    String id;
+    String username;
     String firstName;
     String lastName;
     LocalDate dob;
-    String city;
+    Roles role;
 }

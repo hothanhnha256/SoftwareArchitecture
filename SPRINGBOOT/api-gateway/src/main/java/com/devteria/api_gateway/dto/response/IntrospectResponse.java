@@ -1,4 +1,4 @@
-package com.devteria.identity.dto.response;
+package com.devteria.api_gateway.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +8,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PermissionResponse {
-    String name;
-    String description;
+public class IntrospectResponse {
+    boolean valid;
 }
