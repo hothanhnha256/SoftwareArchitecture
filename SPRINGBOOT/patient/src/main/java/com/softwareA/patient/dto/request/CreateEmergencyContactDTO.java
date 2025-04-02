@@ -1,5 +1,7 @@
 package com.softwareA.patient.dto.request;
 
+import com.softwareA.patient.model.EmergencyContactRelationship;
+
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
@@ -21,7 +23,7 @@ public class CreateEmergencyContactDTO {
     String lastName;
 
     @NotNull
-    String relationship;
+    EmergencyContactRelationship relationship;
 
     @NotNull
     String patientId;
