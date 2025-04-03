@@ -28,7 +28,10 @@ import reactor.core.publisher.Mono;
 import reactor.netty.http.server.HttpServerResponse;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Component
 @Slf4j
@@ -38,10 +41,19 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     IdentityService identityService;
     ObjectMapper objectMapper;
 
+    // @NonFinal
+    // private String[] publicEndpoints = {
+    // "/identity/auth/.*",
+    // "/identity/users",
+    // };
+
     @NonFinal
-    private String[] publicEndpoints = {
-            "/identity/auth/.*",
-            "/identity/users"
+    private final Map<String, Set<String>> publicEndpoints = new HashMap<>() {
+        {
+            put("/identity/auth/.*", Set.of("GET", "POST")); // Both GET and POST allowed
+            put("/identity/users", Set.of("GET")); // Only GET is allowed
+            put("/patient/", Set.of("POST")); // Only POST is allowed
+        }
     };
 
     @Value("${app.prefix-api}")
@@ -69,7 +81,8 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
                 log.info(introspectResponse.getResult().toString());
                 log.info("hjere");
                 return identityService.myinfo(token).flatMap(userResponse -> { // truyền token vào myinfo()
-                    log.info("here man");
+                    log.info("UserId " + userResponse.getResult().getId().toString());
+                    log.info("UserRole " + userResponse.getResult().getRole().toString());
                     if (userResponse.getResult() != null) {
                         ServerHttpRequest mutatedRequest = exchange.getRequest()
                                 .mutate()
@@ -91,20 +104,28 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         });
     }
 
-
     @Override
     public int getOrder() {
         return -1;
     }
 
-    private boolean isPublicEndpoint(ServerHttpRequest request){
-        return Arrays.stream(publicEndpoints)
-                .anyMatch(s -> request.getURI().getPath().matches(apiPrefix + s));
-    }
+    // private boolean isPublicEndpoint(ServerHttpRequest request) {
+    //     return Arrays.stream(publicEndpoints)
+    //             .anyMatch(s -> request.getURI().getPath().matches(apiPrefix + s));
+    // }
 
-    Mono<Void> unauthenticated(ServerHttpResponse response){
+    private boolean isPublicEndpoint(ServerHttpRequest request) {
+        String path = request.getURI().getPath();
+        String method = request.getMethod().toString(); // Get HTTP method (e.g., GET, POST)
+    
+        return publicEndpoints.entrySet().stream()
+                .anyMatch(entry -> path.matches(apiPrefix + entry.getKey()) && entry.getValue().contains(method));
+    }
+    
+
+    Mono<Void> unauthenticated(ServerHttpResponse response) {
         ApiResponse<?> apiResponse = ApiResponse.builder()
-                .code(1401)
+                .code(401)
                 .message("Unauthenticated")
                 .build();
 
