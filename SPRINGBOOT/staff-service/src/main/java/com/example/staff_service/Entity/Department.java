@@ -7,14 +7,18 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Service;
 
-@Data
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Document(collection = "department")
 public class Department {
     @Id
-    String id;
-    String name;
-    String description;
+    private String id;
+    private String name;
+    private String description;
 
 
 }

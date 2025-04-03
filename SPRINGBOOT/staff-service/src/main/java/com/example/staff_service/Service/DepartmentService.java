@@ -2,20 +2,21 @@ package com.example.staff_service.Service;
 
 import com.example.staff_service.Entity.Department;
 import com.example.staff_service.Repository.DepartmentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 public class DepartmentService {
-    @Autowired
-    private final DepartmentRepository departmentRepository;
-
-    public DepartmentService(DepartmentRepository departmentRepository) {
-        this.departmentRepository = departmentRepository;
-    }
+    DepartmentRepository departmentRepository;
 
     public List<Department> getAllDepartments() {
         return departmentRepository.findAll();
