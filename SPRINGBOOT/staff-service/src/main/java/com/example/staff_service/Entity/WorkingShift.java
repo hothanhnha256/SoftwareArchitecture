@@ -1,6 +1,7 @@
 package com.example.staff_service.Entity;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -19,9 +21,8 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Document(collection = "workingShift")
 public class WorkingShift {
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     Date date;
     int hours;
-
-    @DBRef
-    Staff staffId;
+    List<String> listStaff;
 }
