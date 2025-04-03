@@ -23,12 +23,6 @@ public class Staff {
     String role;
     String phoneNumber;
     String address;
-
-    @DBRef
-    WorkingShift workingShiftId;
-    @DBRef
-    Department departmentId;
-
-
+    String departmentId;
 
 }

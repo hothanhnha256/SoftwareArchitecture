@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -18,15 +19,9 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Document(collection = "workingShift")
 public class WorkingShift {
-    @Id
-    String id;
-    Date startTime;
-    Date endTime;
+    Date date;
+    int hours;
 
-    WorkingShift(Date startTime, Date endTime) {
-        this.id = UUID.randomUUID().toString();
-        this.startTime = startTime;
-        this.endTime = endTime;
-    }
-
+    @DBRef
+    Staff staffId;
 }
