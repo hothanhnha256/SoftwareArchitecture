@@ -2,6 +2,7 @@ package com.example.staff_service.Controller;
 
 
 import com.example.staff_service.DTO.Response.ApiResponse;
+import com.example.staff_service.DTO.Response.WorkingShiftResponse;
 import com.example.staff_service.Entity.WorkingShift;
 import com.example.staff_service.Service.WorkingShiftService;
 import lombok.AccessLevel;
@@ -30,14 +31,14 @@ public class WorkingShiftController {
                 .build();
     }
     @GetMapping("")
-    public ApiResponse<List<WorkingShift>> getAllWorkingShifts(
+    public ApiResponse<List<WorkingShiftResponse>> getAllWorkingShifts(
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
             @RequestParam(required = false) String listStaff) {
 
-        List<WorkingShift> workingShifts = workingShiftService.getWorkingShifts(startDate, endDate, listStaff);
+        List<WorkingShiftResponse> workingShifts = workingShiftService.getWorkingShifts(startDate, endDate, listStaff);
 
-        return ApiResponse.<List<WorkingShift>>builder()
+        return ApiResponse.<List<WorkingShiftResponse>>builder()
                 .code(200)
                 .message("Success")
                 .result(workingShifts)

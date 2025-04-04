@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -49,8 +48,5 @@ public class WorkingShiftService {
         } else {
             workingShifts = workingShiftRepository.findAll();
         }
-        return workingShifts.stream()
-                .map(shift -> new WorkingShiftResponse(shift.getDate(), shift.getHours()))
-                .collect(Collectors.toList());
     }
 }
