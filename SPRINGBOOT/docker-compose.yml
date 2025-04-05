@@ -1,14 +1,20 @@
-version: '3.9'
 services:
-  dev-db:
-    image: postgres:13
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: nhahothanh2564.
-      POSTGRES_DB: localhost
+
+  patient-postgres:
+    image: postgres:17
+    container_name: patient-postgres
+    restart: always
     ports:
-      - '5432:5432'
-    networks:
-      - nhahothanh
-networks:
-  nhahothanh:
+      - "5440:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: patient_db
+    volumes:
+      - patient-postgres:/var/lib/postgresql/data
+
+
+volumes:
+  identity-postgres:
+  profile-postgres:
+  patient-postgres:
