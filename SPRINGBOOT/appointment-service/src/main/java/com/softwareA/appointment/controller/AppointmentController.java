@@ -9,7 +9,7 @@ import com.softwareA.appointment.exception.ErrorCode;
 import com.softwareA.appointment.model.appointment.Appointment;
 import com.softwareA.appointment.model.staff.Doctor;
 import com.softwareA.appointment.service.AppointmentService;
-import com.softwareA.patient.dto.response.ApiResponse;
+import com.softwareA.hospital.dto.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

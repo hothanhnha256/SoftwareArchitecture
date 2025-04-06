@@ -16,8 +16,5 @@ public class ApiResponse<T> {
     private int code = 1000;
 
     private String message;
-    private Integer limit;
-    private Integer page;
-    private Integer total;
     private T result;
 }
