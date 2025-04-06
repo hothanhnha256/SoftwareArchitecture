@@ -21,8 +21,17 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Document(collection = "workingShift")
 public class WorkingShift {
+    @Id
+    String id;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     Date date;
     int hours;
     List<String> listStaff;
+
+    public WorkingShift(Date date, int hours, List<String> listStaff) {
+        this.id = UUID.randomUUID().toString();
+        this.date = date;
+        this.hours = hours;
+        this.listStaff = listStaff;
+    }
 }

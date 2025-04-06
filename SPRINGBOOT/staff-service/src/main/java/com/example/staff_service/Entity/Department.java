@@ -7,6 +7,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @Builder
@@ -20,5 +22,9 @@ public class Department {
     private String name;
     private String description;
 
-
+    public Department(String name, String description) {
+        this.id = UUID.randomUUID().toString();
+        this.name = name;
+        this.description = description;
+    }
 }
