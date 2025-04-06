@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,5 +53,16 @@ public class WorkingShiftService {
         return workingShifts.stream()
                 .map(shift -> new WorkingShiftResponse(shift.getDate(), shift.getHours()))
                 .collect(Collectors.toList());
+    }
+    public WorkingShift addStaffToWorkingShift(String workingShiftId, String staffId) {
+        Optional<WorkingShift> optionalWorkingShift = workingShiftRepository.findById(workingShiftId);
+
+        if (optionalWorkingShift.isPresent()) {
+            WorkingShift workingShift = optionalWorkingShift.get();
+            if (!workingShift.getListStaff().contains(staffId)) workingShift.getListStaff().add(staffId);
+            return workingShiftRepository.save(workingShift);
+        } else {
+            throw new RuntimeException("WorkingShift not found with id: " + workingShiftId);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.staff_service.Controller;
 
 
+import com.example.staff_service.DTO.Request.StaffRequest;
 import com.example.staff_service.DTO.Response.ApiResponse;
 import com.example.staff_service.DTO.Response.WorkingShiftResponse;
 import com.example.staff_service.Entity.WorkingShift;
@@ -43,6 +44,18 @@ public class WorkingShiftController {
                 .message("Success")
                 .result(workingShifts)
                 .build();
+    }
+    @PostMapping("/{workingShiftId}/add-staff")
+    public ApiResponse<WorkingShift> addStaffToWorkingShift(
+            @PathVariable String workingShiftId,
+            @RequestBody StaffRequest request) {
+        WorkingShift updatedWorkingShift = workingShiftService.addStaffToWorkingShift(workingShiftId, request.getStaffId());
+
+        return ApiResponse.<WorkingShift>builder()
+                        .code(200)
+                        .message("Staff added successfully to the working shift.")
+                        .result(updatedWorkingShift)
+                        .build();
     }
 
 }
