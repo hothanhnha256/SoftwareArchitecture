@@ -3,6 +3,7 @@ package com.example.staff_service.Controller;
 
 import com.example.staff_service.DTO.Request.StaffRequest;
 import com.example.staff_service.DTO.Response.ApiResponse;
+import com.example.staff_service.DTO.Response.StaffResponse;
 import com.example.staff_service.DTO.Response.WorkingShiftResponse;
 import com.example.staff_service.Entity.WorkingShift;
 import com.example.staff_service.Service.WorkingShiftService;
@@ -45,6 +46,7 @@ public class WorkingShiftController {
                 .result(workingShifts)
                 .build();
     }
+    // Add Staff into Shift
     @PostMapping("/{workingShiftId}/add-staff")
     public ApiResponse<WorkingShift> addStaffToWorkingShift(
             @PathVariable String workingShiftId,
@@ -57,5 +59,18 @@ public class WorkingShiftController {
                         .result(updatedWorkingShift)
                         .build();
     }
+    // Get Staff in Shift
+    @GetMapping("/{workingShiftId}/staffs")
+    public ApiResponse<List<StaffResponse>> getStaffsInWorkingShift(@PathVariable String workingShiftId) {
+
+        List<StaffResponse> staffs = workingShiftService.getStaffsInWorkingShift(workingShiftId);
+        return ApiResponse.<List<StaffResponse>>builder()
+                .code(200)
+                .message("Success")
+                .result(staffs)
+                .build();
+    }
+
+
 
 }
