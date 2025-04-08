@@ -20,7 +20,6 @@ import java.util.UUID;
 @Builder
 public class Patient {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID) // Auto-generate UUID
     UUID id;
     String lastName;
     @NotNull
@@ -57,6 +56,9 @@ public class Patient {
     @JoinColumn(name = "patientId") // This creates a foreign key in EmergencyContact
     private List<EmergencyContact> emergencyContacts;
 
+    public Integer getAge() {
+        return LocalDate.now().getYear() - dob.getYear();
+    }
     // @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     // @JoinColumn(name = "patientId") // This creates a foreign key in
     // EmergencyContact

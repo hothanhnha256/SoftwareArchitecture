@@ -6,9 +6,9 @@ import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.devteria.identity.dto.response.ApiResponse;
 import com.devteria.identity.dto.request.UserCreationRequest;
 import com.devteria.identity.dto.request.UserUpdateRequest;
+import com.devteria.identity.dto.response.ApiResponse;
 import com.devteria.identity.dto.response.UserResponse;
 import com.devteria.identity.service.UserService;
 

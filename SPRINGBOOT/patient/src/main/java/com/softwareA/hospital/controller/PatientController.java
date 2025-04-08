@@ -12,7 +12,6 @@ import com.softwareA.hospital.exception.AppException;
 import com.softwareA.hospital.exception.ErrorCode;
 import com.softwareA.hospital.model.EmergencyContact;
 import com.softwareA.hospital.model.Patient;
-import com.softwareA.hospital.payment.BillingService;
 import com.softwareA.hospital.service.PatientService;
 
 import jakarta.validation.Valid;
