@@ -6,6 +6,7 @@ import com.softwareA.appointment.dto.request.GetAvailableDoctorsDTO;
 import com.softwareA.appointment.dto.request.UpdateAppointmentDTO;
 import com.softwareA.appointment.exception.AppException;
 import com.softwareA.appointment.exception.ErrorCode;
+import com.softwareA.appointment.model.Department;
 import com.softwareA.appointment.model.appointment.Appointment;
 import com.softwareA.appointment.model.staff.Doctor;
 import com.softwareA.appointment.service.AppointmentService;
@@ -34,6 +35,13 @@ public class AppointmentController {
     public String testFeign() {
         log.info("testFeign");
         return appointmentService.testFeign();
+    }
+
+    @GetMapping("/departments")
+    public ResponseEntity<ApiResponse<List<Department>>> getDepartments() {
+        log.info("getDepartments");
+        ApiResponse<List<Department>> departments = this.appointmentService.getDepartments();
+        return ResponseEntity.ok().body(departments);
     }
 
     @GetMapping("/available-doctors")

@@ -1,5 +1,6 @@
 package com.softwareA.appointment.service;
 
+import com.softwareA.appointment.client.DepartmentClient;
 import com.softwareA.appointment.client.PatientClient;
 import com.softwareA.appointment.client.StaffClient;
 import com.softwareA.appointment.dto.request.CreateAppointmentDTO;
@@ -8,6 +9,7 @@ import com.softwareA.appointment.dto.request.GetAvailableDoctorsDTO;
 import com.softwareA.appointment.dto.request.UpdateAppointmentDTO;
 import com.softwareA.appointment.exception.AppException;
 import com.softwareA.appointment.exception.ErrorCode;
+import com.softwareA.appointment.model.Department;
 import com.softwareA.appointment.model.appointment.Appointment;
 import com.softwareA.appointment.model.patient.Patient;
 import com.softwareA.appointment.model.staff.Doctor;
@@ -32,6 +34,7 @@ import java.util.UUID;
 public class AppointmentService {
     private final PatientClient patientClient;
     private final StaffClient staffClient;
+    private final DepartmentClient departmentClient;
     private final AppointmentRepository appointmentRepository;
     private final List<AppointmentUpdateStrategy> updateStrategies;
 
@@ -58,56 +61,6 @@ public class AppointmentService {
         Appointment updatedAppointment = strategy.update(appointment, dto, userId);
         return appointmentRepository.save(updatedAppointment);
     }
-
-//    private Appointment updateAppointmentByUser(Appointment appointment, UpdateAppointmentDTO dto, UUID userId) {
-//        // Check if the patient is the owner of the appointment
-//        if (!appointment.getPatientId().equals(userId)) {
-//            throw new AppException(ErrorCode.FORBIDDEN, "You are not allowed to update this appointment");
-//        }
-//
-//        // Update status if provided
-//        if (dto.getStatus() != null) {
-//            if (appointment.getStatus().canAppointmentBeUpdatedByPatient(dto.getStatus())) {
-//                appointment.setStatus(dto.getStatus());
-//            } else {
-//                throw new AppException(ErrorCode.FORBIDDEN, "You are not allowed to change this appointment status to " + dto.getStatus());
-//            }
-//        }
-//
-//        // Update brief description if provided and status is WAITING
-//        if (dto.getBriefDescription() != null) {
-//            if (appointment.getStatus() == AppointmentStatus.WAITING) {
-//                appointment.setBriefDescription(dto.getBriefDescription());
-//            } else {
-//                throw new AppException(ErrorCode.FORBIDDEN, "You are not allowed to change this appointment");
-//            }
-//        }
-//
-//        return appointmentRepository.save(appointment);
-//    }
-//
-//    private Appointment updateAppointmentByDoctor(Appointment appointment, UpdateAppointmentDTO dto, UUID userId) {
-//        // Check if the doctor is the owner of the appointment
-//        if (!appointment.getDoctorId().equals(userId)) {
-//            throw new AppException(ErrorCode.FORBIDDEN, "You are not allowed to update this appointment");
-//        }
-//
-//        // Update status if provided
-//        if (dto.getStatus() != null) {
-//            if (appointment.getStatus().canAppointmentBeUpdatedByDoctor(dto.getStatus())) {
-//                appointment.setStatus(dto.getStatus());
-//            } else {
-//                throw new AppException(ErrorCode.FORBIDDEN, "You are not allowed to change this appointment status to " + dto.getStatus());
-//            }
-//        }
-//
-//        // Doctors are not allowed to update the brief description
-//        if (dto.getBriefDescription() != null) {
-//            throw new AppException(ErrorCode.FORBIDDEN, "You are not allowed to change this field");
-//        }
-//
-//        return appointmentRepository.save(appointment);
-//    }
 
     public Page<Appointment> getAppointments(UUID userId, String role, GetAppointmentsDTO dto, Pageable pageable) {
         // to check authorization
@@ -142,7 +95,6 @@ public class AppointmentService {
         //TODO: to check if this doctor exists
         //TODO: to check if this shift exists
 
-
         Appointment appointment = Appointment.builder()
                 .id(UUID.randomUUID())
                 .patientId(userId)
@@ -159,5 +111,10 @@ public class AppointmentService {
         ApiResponse<List<Doctor>> doctorResponse = this.staffClient.getAvailableDoctors(dto, pageable);
         //TODO: check how many appointments each doctor has and filter again
         return doctorResponse;
+    }
+
+    public ApiResponse<List<Department>> getDepartments() {
+        ApiResponse<List<Department>> departmentResponse = this.departmentClient.getDepartments();
+        return departmentResponse;
     }
 }
