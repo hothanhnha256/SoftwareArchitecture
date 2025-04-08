@@ -3,8 +3,10 @@ package com.example.staff_service.Service;
 
 import com.example.staff_service.DTO.Response.StaffResponse;
 import com.example.staff_service.DTO.Response.WorkingShiftResponse;
+import com.example.staff_service.Entity.Department;
 import com.example.staff_service.Entity.Staff;
 import com.example.staff_service.Entity.WorkingShift;
+import com.example.staff_service.Repository.DepartmentRepository;
 import com.example.staff_service.Repository.StaffRepository;
 import com.example.staff_service.Repository.WorkingShiftRepository;
 import lombok.AccessLevel;
@@ -27,7 +29,6 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class WorkingShiftService {
     WorkingShiftRepository workingShiftRepository;
-    StaffRepository staffRepository;
     MongoTemplate mongoTemplate;
 
 
@@ -74,7 +75,7 @@ public class WorkingShiftService {
             throw new RuntimeException("WorkingShift not found with id: " + workingShiftId);
         }
     }
-    public List<StaffResponse> getStaffsInWorkingShift(String workingShiftId) {
+    public List<StaffResponse> getStaffsInWorkingShift(String workingShiftId, String departmentId) {
         Optional<WorkingShift> optionalWorkingShift = workingShiftRepository.findById(workingShiftId);
         if (optionalWorkingShift.isPresent()) {
             WorkingShift workingShift = optionalWorkingShift.get();
@@ -88,6 +89,9 @@ public class WorkingShiftService {
             System.out.println("Staff List: " + staffList);
             List<StaffResponse> staffResponses = new ArrayList<>();
             for (Staff staff : staffList) {
+                if (departmentId != null && !departmentId.equals(staff.getDepartmentId())) {
+                    continue;
+                }
                 StaffResponse staffResponse = new StaffResponse(
                         staff.getName(),
                         staff.getRole(),

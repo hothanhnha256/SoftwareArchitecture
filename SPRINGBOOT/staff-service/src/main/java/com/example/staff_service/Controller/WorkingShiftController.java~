@@ -60,7 +60,7 @@ public class WorkingShiftController {
                         .build();
     }
     // Get Staff in Shift
-    @GetMapping("/available")
+    @GetMapping("/staffs/available")
     public ApiResponse<List<StaffResponse>> getStaffsInWorkingShift(
             @RequestParam(required = false) String workingShiftId,
             @RequestParam(required = false) String departmentId
