@@ -9,6 +9,7 @@ import com.example.staff_service.Entity.WorkingShift;
 import com.example.staff_service.Repository.DepartmentRepository;
 import com.example.staff_service.Repository.StaffRepository;
 import com.example.staff_service.Repository.WorkingShiftRepository;
+import com.example.staff_service.Utils.DateUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -18,11 +19,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Criteria;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -75,18 +74,24 @@ public class WorkingShiftService {
             throw new RuntimeException("WorkingShift not found with id: " + workingShiftId);
         }
     }
-    public List<StaffResponse> getStaffsInWorkingShift(String workingShiftId, String departmentId) {
-        Optional<WorkingShift> optionalWorkingShift = workingShiftRepository.findById(workingShiftId);
+    public List<StaffResponse> getStaffsInWorkingShift(Date date, int hours, String departmentId) {
+        Date[] range = DateUtils.getStartAndEndOfDay(date);
+        Date start = range[0];
+        Date end = range[1];
+        Optional<WorkingShift> optionalWorkingShift = workingShiftRepository.findOneByDateRangeAndHours(start, end, hours);
+
         if (optionalWorkingShift.isPresent()) {
             WorkingShift workingShift = optionalWorkingShift.get();
+
             // Lấy danh sách staffIds từ workingShift
             List<String> staffIds = workingShift.getListStaff();
             System.out.println("Staff IDs: " + staffIds);
 
             Query query = new Query();
-            query.addCriteria(Criteria.where("id").in(staffIds));  // Sử dụng "id" hoặc tên trường phù hợp với trường trong MongoDB
+            query.addCriteria(Criteria.where("id").in(staffIds)); // field "id" phải đúng với MongoDB
             List<Staff> staffList = mongoTemplate.find(query, Staff.class);
             System.out.println("Staff List: " + staffList);
+
             List<StaffResponse> staffResponses = new ArrayList<>();
             for (Staff staff : staffList) {
                 if (departmentId != null && !departmentId.equals(staff.getDepartmentId())) {
@@ -103,7 +108,9 @@ public class WorkingShiftService {
 
             return staffResponses;
         } else {
-            throw new RuntimeException("WorkingShift not found with id: " + workingShiftId);
+            throw new RuntimeException("WorkingShift not found with Date : " + date + " and Hours : " + hours);
         }
     }
+
 }
+

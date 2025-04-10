@@ -2,10 +2,12 @@ package com.example.staff_service.Repository;
 
 import com.example.staff_service.Entity.WorkingShift;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface WorkingShiftRepository extends MongoRepository<WorkingShift, String> {
@@ -17,4 +19,8 @@ public interface WorkingShiftRepository extends MongoRepository<WorkingShift, St
 
     // Truy vấn WorkingShift theo staffId
     List<WorkingShift> findByListStaffContaining(String staffId);
+
+    @Query("{ 'date': { $gte: ?0, $lt: ?1 }, 'hours': ?2 }")
+    Optional<WorkingShift> findOneByDateRangeAndHours(Date start, Date end, int hours);
+
 }

@@ -10,9 +10,12 @@ import com.example.staff_service.Service.WorkingShiftService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -62,11 +65,15 @@ public class WorkingShiftController {
     // Get Staff in Shift
     @GetMapping("/available")
     public ApiResponse<List<StaffResponse>> getStaffsInWorkingShift(
-            @RequestParam(required = false) String workingShiftId,
+//            @RequestParam(required = false) String workingShiftId,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
+            @RequestParam(required = false) int hours,
             @RequestParam(required = false) String departmentId
     ) {
+        System.out.println("Date: " + date);
+        System.out.println("Hours: " + hours);
 
-        List<StaffResponse> staffs = workingShiftService.getStaffsInWorkingShift(workingShiftId,departmentId);
+        List<StaffResponse> staffs = workingShiftService.getStaffsInWorkingShift(date, hours, departmentId);
         return ApiResponse.<List<StaffResponse>>builder()
                 .code(200)
                 .message("Success")
