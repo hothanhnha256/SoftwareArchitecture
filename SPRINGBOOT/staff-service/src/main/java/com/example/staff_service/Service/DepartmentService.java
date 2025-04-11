@@ -1,6 +1,7 @@
 package com.example.staff_service.Service;
 
 import com.example.staff_service.Entity.Department;
+import com.example.staff_service.Exception.ResourceNotFoundException;
 import com.example.staff_service.Repository.DepartmentRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,9 @@ public class DepartmentService {
     }
 
     public Optional<Department> getDepartmentById(String id) {
+        if (!departmentRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Department not found with id: " + id);
+        }
         return departmentRepository.findById(id);
     }
 
