@@ -93,6 +93,10 @@ public class AppointmentService {
         log.info("Patient info: " + patientApiResponse.toString());
 
         //TODO: to check if this doctor exists
+        ApiResponse<Doctor> doctorResponse = staffClient.getDoctorById(dto.getDoctorId());
+        if (doctorResponse.getResult() == null) {
+            throw new AppException(ErrorCode.RESOURCE_NOT_FOUND, "Doctor not found");
+        }
         //TODO: to check if this shift exists
 
         Appointment appointment = Appointment.builder()
