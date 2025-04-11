@@ -14,13 +14,13 @@ import java.util.List;
 
 @FeignClient(name = "staff-service", url = "${staff-service.url}")
 public interface StaffClient {
-    @GetMapping("/doctors/available")
-    ApiResponse<List<Doctor>> getAvailableDoctors(GetAvailableDoctorsDTO dto, Pageable pageable);
+    @GetMapping("/department/{departmentId}")
+    ApiResponse<List<Doctor>> getAvailableDoctors(@PathVariable("departmentId") String departmentId);
     @GetMapping("/{id}")
     ApiResponse<Doctor> getDoctorById(@RequestParam("id") String id);
     @GetMapping("/working-shifts/{id}")
     ApiResponse<Shift> getShiftById(@PathVariable("id") String id);
-    @GetMapping("/working-shifts")
+    @GetMapping("/working-shifts/get-shift-id")
     ApiResponse<Shift> getShiftByDateTime(@RequestParam("date") String date,
                                           @RequestParam("hours") Integer hour);
 

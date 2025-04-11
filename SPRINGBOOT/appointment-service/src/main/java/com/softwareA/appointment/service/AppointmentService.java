@@ -170,9 +170,10 @@ public class AppointmentService {
         ApiResponse<List<Doctor>> doctorResponse = null;
         String shiftId;
         try {
-            doctorResponse = this.staffClient.getAvailableDoctors(dto, pageable);
+            doctorResponse = this.staffClient.getAvailableDoctors(dto.getDepartmentId());
         } catch (Exception e) {
-            throw new AppException(ErrorCode.RESOURCE_NOT_FOUND, "Doctors not found");
+            log.info("No doctor in this department");
+            return new ArrayList<>();
         }
 
         try {
@@ -184,7 +185,8 @@ public class AppointmentService {
             shiftId = Optional.ofNullable(shift.getId())
                     .orElseThrow(() -> new AppException(ErrorCode.RESOURCE_NOT_FOUND, "Shift ID is missing"));
         } catch (Exception e) {
-            throw new AppException(ErrorCode.RESOURCE_NOT_FOUND, "Doctors not found");
+            log.info("Shift not found");
+            return new ArrayList<>();
         }
         List<Doctor> doctors = doctorResponse.getResult();
         // check if this shift, doctor is available
