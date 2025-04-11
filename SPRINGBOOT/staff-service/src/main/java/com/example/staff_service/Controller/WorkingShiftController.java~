@@ -14,7 +14,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
 
@@ -70,8 +69,6 @@ public class WorkingShiftController {
             @RequestParam(required = false) int hours,
             @RequestParam(required = false) String departmentId
     ) {
-        System.out.println("Date: " + date);
-        System.out.println("Hours: " + hours);
 
         List<StaffResponse> staffs = workingShiftService.getStaffsInWorkingShift(date, hours, departmentId);
         return ApiResponse.<List<StaffResponse>>builder()
