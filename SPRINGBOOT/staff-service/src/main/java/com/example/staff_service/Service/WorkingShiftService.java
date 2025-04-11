@@ -115,6 +115,18 @@ public class WorkingShiftService {
             throw new RuntimeException("WorkingShift not found with Date : " + date + " and Hours : " + hours);
         }
     }
+    public WorkingShift getShiftIdByDateAndHours(Date date, int hours) {
+        Date[] range = DateUtils.getStartAndEndOfDay(date);
+        Date start = range[0];
+        Date end = range[1];
+        Optional<WorkingShift> optionalWorkingShift = workingShiftRepository.findOneByDateRangeAndHours(start, end, hours);
+
+        if (optionalWorkingShift.isPresent()) {
+            return optionalWorkingShift.get();
+        } else {
+            throw new RuntimeException("WorkingShift not found with Date : " + date + " and Hours : " + hours);
+        }
+    }
 
 }
 
