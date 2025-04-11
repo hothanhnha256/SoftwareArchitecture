@@ -19,9 +19,9 @@ public class Appointment {
     @Column(nullable = false)
     UUID patientId;
     @Column(nullable = false)
-    UUID doctorId;
+    String doctorId;
     @Column(nullable = false)
-    UUID shiftId;
+    String shiftId;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING) // Store as a string in DB
     AppointmentStatus status;

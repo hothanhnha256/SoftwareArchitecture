@@ -2,6 +2,7 @@ package com.softwareA.appointment.client;
 
 import com.softwareA.appointment.dto.request.GetAvailableDoctorsDTO;
 import com.softwareA.appointment.model.staff.Doctor;
+import com.softwareA.appointment.model.staff.Shift;
 import com.softwareA.hospital.dto.response.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Pageable;
@@ -16,4 +17,6 @@ public interface StaffClient {
     ApiResponse<List<Doctor>> getAvailableDoctors(GetAvailableDoctorsDTO dto, Pageable pageable);
     @GetMapping("/{id}")
     ApiResponse<Doctor> getDoctorById(@RequestParam("id") String id);
+    @GetMapping("/{id}")
+    ApiResponse<Shift> getShiftById(@RequestParam("id") String id);
 }

@@ -13,6 +13,7 @@ import com.softwareA.appointment.model.Department;
 import com.softwareA.appointment.model.appointment.Appointment;
 import com.softwareA.appointment.model.patient.Patient;
 import com.softwareA.appointment.model.staff.Doctor;
+import com.softwareA.appointment.model.staff.Shift;
 import com.softwareA.appointment.repository.AppointmentRepository;
 import com.softwareA.appointment.specification.AppointmentSpecification;
 import com.softwareA.appointment.strategy.AppointmentUpdateStrategy;
@@ -91,19 +92,26 @@ public class AppointmentService {
         }
 
         log.info("Patient info: " + patientApiResponse.toString());
-
-        //TODO: to check if this doctor exists
-        ApiResponse<Doctor> doctorResponse = staffClient.getDoctorById(dto.getDoctorId());
-        if (doctorResponse.getResult() == null) {
+        try {
+            ApiResponse<Doctor> doctorResponse = staffClient.getDoctorById(dto.getDoctorId());
+            log.info("Doctor info: " + doctorResponse.getResult().toString());
+        }
+        catch (Exception e) {
             throw new AppException(ErrorCode.RESOURCE_NOT_FOUND, "Doctor not found");
         }
-        //TODO: to check if this shift exists
 
+        try {
+            ApiResponse<Shift> shiftResponse = staffClient.getShiftById(dto.getShiftId());
+            log.info("Shift info: " + shiftResponse.getResult().toString());
+        }
+        catch (Exception e) {
+            throw new AppException(ErrorCode.RESOURCE_NOT_FOUND, "Shift not found");
+        }
         Appointment appointment = Appointment.builder()
                 .id(UUID.randomUUID())
                 .patientId(userId)
-                .doctorId(UUID.randomUUID()) //TODO: temp
-                .shiftId(UUID.randomUUID()) //TODO: temp
+                .doctorId(dto.getDoctorId())
+                .shiftId(dto.getShiftId())
                 .briefDescription(dto.getBriefDescription())
                 .build();
 

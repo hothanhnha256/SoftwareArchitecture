@@ -92,6 +92,8 @@ public class AppointmentController {
             throw new AppException(ErrorCode.INVALID_UUID);
         }
 
+
+
         Appointment createdAppointment = appointmentService.createAppointment(patientId, role, dto);
         return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(ApiResponse.<Appointment>builder().result(createdAppointment).build());
 

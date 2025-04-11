@@ -4,5 +4,10 @@ import lombok.Data;
 
 @Data
 public class Doctor {
-    //TODO: Add fields for doctor information
+    String id;
+    String name;
+    String role;
+    String phoneNumber;
+    String address;
+    String departmentId;
 }
