@@ -63,6 +63,10 @@ public class WorkingShiftService {
                 .map(shift -> new WorkingShiftResponse(shift.getDate(), shift.getHours()))
                 .collect(Collectors.toList());
     }
+    public WorkingShift getWorkingShiftById(String workingShiftId) {
+        return workingShiftRepository.findById(workingShiftId)
+                .orElseThrow(() -> new RuntimeException("WorkingShift not found with id: " + workingShiftId));
+    }
     public WorkingShift addStaffToWorkingShift(String workingShiftId, String staffId) {
         Optional<WorkingShift> optionalWorkingShift = workingShiftRepository.findById(workingShiftId);
 

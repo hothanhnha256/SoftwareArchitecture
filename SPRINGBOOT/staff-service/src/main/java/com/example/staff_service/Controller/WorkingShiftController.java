@@ -49,6 +49,15 @@ public class WorkingShiftController {
                 .result(workingShifts)
                 .build();
     }
+    @GetMapping("/{workingShiftId}")
+    public ApiResponse<WorkingShift> getWorkingShiftById(@PathVariable String workingShiftId) {
+        WorkingShift workingShift = workingShiftService.getWorkingShiftById(workingShiftId);
+        return ApiResponse.<WorkingShift>builder()
+                .code(200)
+                .message("Success")
+                .result(workingShift)
+                .build();
+    }
     // Add Staff into Shift
     @PostMapping("/{workingShiftId}/add-staff")
     public ApiResponse<WorkingShift> addStaffToWorkingShift(
