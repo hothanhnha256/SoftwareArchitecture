@@ -7,6 +7,7 @@ import com.softwareA.appointment.dto.request.CreateAppointmentDTO;
 import com.softwareA.appointment.dto.request.GetAppointmentsDTO;
 import com.softwareA.appointment.dto.request.GetAvailableDoctorsDTO;
 import com.softwareA.appointment.dto.request.UpdateAppointmentDTO;
+import com.softwareA.appointment.dto.response.AppointmentDetailDTO;
 import com.softwareA.appointment.exception.AppException;
 import com.softwareA.appointment.exception.ErrorCode;
 import com.softwareA.appointment.model.Department;
@@ -21,6 +22,7 @@ import com.softwareA.hospital.dto.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,12 +41,21 @@ public class AppointmentService {
     private final DepartmentClient departmentClient;
     private final AppointmentRepository appointmentRepository;
     private final List<AppointmentUpdateStrategy> updateStrategies;
+    private static final int MAX_APPOINTMENTS_PER_SHIFT = 2;
 
     public String testFeign() {
         // Call the Feign client method
         String response = patientClient.test().getResult();
         log.info("testFeign " + response);
         return response;
+    }
+
+    private boolean _checkIfAppointmentIsValid(String doctorId, String shiftId) {
+        List<Appointment> appointments = appointmentRepository.findByDoctorIdAndShiftId(doctorId, shiftId);
+        if (appointments.size() >= MAX_APPOINTMENTS_PER_SHIFT) {
+            return false;
+        }
+        return true;
     }
 
     public Appointment updateAppointment(UUID userId, String role, UUID appointmentId, UpdateAppointmentDTO dto) {
@@ -77,7 +89,38 @@ public class AppointmentService {
         List<UUID> shiftIds = new ArrayList<>();
         //TODO: add shiftIds
         Specification<Appointment> spec = AppointmentSpecification.getAppointmentsWithFilter(patientId, doctorId, shiftIds, dto.getStatus() != null ? dto.getStatus().toString() : null);
-        return appointmentRepository.findAll(spec, pageable);
+
+        Page<Appointment> appointmentPage = appointmentRepository.findAll(spec, pageable);
+
+        if (!dto.getIncludeDetail()) {
+            return appointmentPage;
+        }
+
+        List<Appointment> detailedList = appointmentPage.getContent().stream()
+                .map(appointment -> {
+                    Doctor doctor = null;
+                    Shift shift = null;
+                    try
+                    {
+                        doctor = staffClient.getDoctorById(appointment.getDoctorId()).getResult();
+                        shift = staffClient.getShiftById(appointment.getShiftId()).getResult();
+                    }
+                    catch (Exception e) {
+                        log.error("Doctor or shift not found");
+                    }
+
+                    appointment.setDoctor(doctor);
+                    appointment.setShift(shift);
+                    return appointment;
+                })
+                .collect(Collectors.toList());
+
+        Page<Appointment> result = new PageImpl<>(
+                detailedList,
+                pageable,
+                appointmentPage.getTotalElements()
+        );
+        return result;
     }
 
     public Appointment createAppointment(UUID userId, String role, CreateAppointmentDTO dto) {
@@ -95,34 +138,47 @@ public class AppointmentService {
         try {
             ApiResponse<Doctor> doctorResponse = staffClient.getDoctorById(dto.getDoctorId());
             log.info("Doctor info: " + doctorResponse.getResult().toString());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new AppException(ErrorCode.RESOURCE_NOT_FOUND, "Doctor not found");
         }
 
         try {
             ApiResponse<Shift> shiftResponse = staffClient.getShiftById(dto.getShiftId());
             log.info("Shift info: " + shiftResponse.getResult().toString());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new AppException(ErrorCode.RESOURCE_NOT_FOUND, "Shift not found");
         }
-        Appointment appointment = Appointment.builder()
-                .id(UUID.randomUUID())
-                .patientId(userId)
-                .doctorId(dto.getDoctorId())
-                .shiftId(dto.getShiftId())
-                .briefDescription(dto.getBriefDescription())
-                .build();
 
-        // Save the appointment to the database (this part is not implemented in this example)
-        return appointmentRepository.save(appointment);
+        if (_checkIfAppointmentIsValid(dto.getDoctorId(), dto.getShiftId())) {
+            Appointment appointment = Appointment.builder()
+                    .id(UUID.randomUUID())
+                    .patientId(userId)
+                    .doctorId(dto.getDoctorId())
+                    .shiftId(dto.getShiftId())
+                    .briefDescription(dto.getBriefDescription())
+                    .build();
+            // Save the appointment to the database (this part is not implemented in this example)
+            return appointmentRepository.save(appointment);
+        } else {
+            throw new AppException(ErrorCode.FORBIDDEN, "This doctor has too many appointments in this shift");
+        }
+
     }
 
-    public ApiResponse<List<Doctor>> getAvailableDoctors(GetAvailableDoctorsDTO dto, Pageable pageable) {
-        ApiResponse<List<Doctor>> doctorResponse = this.staffClient.getAvailableDoctors(dto, pageable);
-        //TODO: check how many appointments each doctor has and filter again
-        return doctorResponse;
+    public List<Doctor> getAvailableDoctors(GetAvailableDoctorsDTO dto, Pageable pageable) {
+        ApiResponse<List<Doctor>> doctorResponse = null;
+        try {
+            doctorResponse = this.staffClient.getAvailableDoctors(dto, pageable);
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.RESOURCE_NOT_FOUND, "Doctors not found");
+        }
+//        List<Doctor> doctors = doctorResponse.getResult();
+//        // check if this shift, doctor is available
+//        doctors = doctors.stream().filter(doctor ->
+//                _checkIfAppointmentIsValid(doctor.getId(), dto.getShiftId())
+//        ).toList();
+//        return doctors;
+        return null;
     }
 
     public ApiResponse<List<Department>> getDepartments() {

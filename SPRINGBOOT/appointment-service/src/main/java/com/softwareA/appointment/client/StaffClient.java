@@ -17,6 +17,6 @@ public interface StaffClient {
     ApiResponse<List<Doctor>> getAvailableDoctors(GetAvailableDoctorsDTO dto, Pageable pageable);
     @GetMapping("/{id}")
     ApiResponse<Doctor> getDoctorById(@RequestParam("id") String id);
-    @GetMapping("/{id}")
+    @GetMapping("/working-shifts/{id}")
     ApiResponse<Shift> getShiftById(@RequestParam("id") String id);
 }

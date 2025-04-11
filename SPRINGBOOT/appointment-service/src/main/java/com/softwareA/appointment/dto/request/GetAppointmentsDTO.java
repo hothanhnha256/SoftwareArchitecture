@@ -9,4 +9,5 @@ public class GetAppointmentsDTO {
     String startDate = LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     String endDate = LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     AppointmentStatus status;
+    Boolean includeDetail = false;
 }
