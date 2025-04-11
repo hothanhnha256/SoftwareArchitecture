@@ -7,6 +7,9 @@ import com.example.staff_service.Service.StaffService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,68 +24,88 @@ public class StaffController {
 
     // Lấy tất cả các bác sĩ
     @GetMapping
-    public ApiResponse<List<Staff>> getAllStaff() {
+    public ResponseEntity<ApiResponse<List<Staff>>> getAllStaff() {
         List<Staff> staffList = staffService.getAllStaff();
-        return ApiResponse.<List<Staff>>builder()
+
+        if (staffList.isEmpty()) {
+            return ResponseEntity.ok(ApiResponse.<List<Staff>>builder()
+                    .code(204)
+                    .message("No staff found")
+                    .result(null)
+                    .build());
+        }
+        ApiResponse<List<Staff>> result = ApiResponse.<List<Staff>>builder()
                 .code(200)
                 .message("Success")
                 .result(staffList)
                 .build();
+        return ResponseEntity.ok(result);
     }
 
     // Lấy bác sĩ theo ID
     @GetMapping("/{id}")
-    public ApiResponse<Staff> getStaffById(@PathVariable String id) {
+    public ResponseEntity<ApiResponse<Staff>> getStaffById(@PathVariable String id) {
         Optional<Staff> staff = staffService.getStaffById(id);
-        return staff.map(st -> ApiResponse.<Staff>builder()
-                        .code(200)
-                        .message("Success")
-                        .result(st)
-                        .build())
-                .orElseGet(() -> ApiResponse.<Staff>builder()
-                        .code(404)
-                        .message("Staff not found")
-                        .result(null)
-                        .build());
-    }
-    @GetMapping("/department/{departmentId}")
-    public ApiResponse<List<Staff>> getStaffByDepartmentId(@PathVariable String departmentId) {
-        List<Staff> staffList = staffService.getStaffByDepartmentId(departmentId);
-        return ApiResponse.<List<Staff>>builder()
-                .code(200)
-                .message("Success")
-                .result(staffList)
-                .build();
-    }
-
-    // Tạo mới bác sĩ
-    @PostMapping("/create")
-    public ApiResponse<Staff> createStaff(@RequestBody Staff staff) {
-        System.out.println(staff);
-        Staff createdStaff = staffService.createStaff(staff);
-        return ApiResponse.<Staff>builder()
-                .code(201)
-                .message("Staff created successfully")
-                .result(createdStaff)
-                .build();
-    }
-
-    // Cập nhật thông tin bác sĩ
-    @PutMapping("/{id}")
-    public ApiResponse<Staff> updateStaff(@PathVariable String id, @RequestBody Staff staffDetails) {
-        Staff updatedStaff = staffService.updateStaff(id, staffDetails);
-        if (updatedStaff != null) {
-            return ApiResponse.<Staff>builder()
+        if (staff.isPresent()) {
+            ApiResponse<Staff> response = ApiResponse.<Staff>builder()
                     .code(200)
-                    .message("Staff updated successfully")
-                    .result(updatedStaff)
+                    .message("Success")
+                    .result(staff.get())
                     .build();
+            return ResponseEntity.ok(response);
         }
-        return ApiResponse.<Staff>builder()
+        ApiResponse<Staff> response = ApiResponse.<Staff>builder()
                 .code(404)
                 .message("Staff not found")
                 .result(null)
                 .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+    @GetMapping("/department/{departmentId}")
+    public ResponseEntity<ApiResponse<List<Staff>>> getStaffByDepartmentId(@PathVariable String departmentId) {
+        List<Staff> staffList = staffService.getStaffByDepartmentId(departmentId);
+        if (staffList.isEmpty()) {
+            return ResponseEntity.ok(ApiResponse.<List<Staff>>builder()
+                    .code(204)
+                    .message("No staff found in this department")
+                    .result(null)
+                    .build());
+        }
+        ApiResponse<List<Staff>> result = ApiResponse.<List<Staff>>builder()
+                .code(200)
+                .message("Success")
+                .result(staffList)
+                .build();
+        return ResponseEntity.ok(result);
+    }
+
+    // Tạo mới bác sĩ
+    @PostMapping("/create")
+    public ResponseEntity<ApiResponse<Staff>> createStaff(@RequestBody Staff staff) {
+        System.out.println(staff);
+        Staff createdStaff = staffService.createStaff(staff);
+        ApiResponse<Staff> response = ApiResponse.<Staff>builder()
+                .code(201)
+                .message("Staff created successfully")
+                .result(createdStaff)
+                .build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    // Cập nhật thông tin bác sĩ
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<Staff>> updateStaff(
+            @PathVariable String id,
+            @RequestBody Staff staffDetails
+    ) {
+        Staff updatedStaff = staffService.updateStaff(id, staffDetails);
+        ApiResponse<Staff> response = ApiResponse.<Staff>builder()
+                .code(2000)
+                .message("Staff updated successfully")
+                .result(updatedStaff)
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 
     // Xóa bác sĩ
