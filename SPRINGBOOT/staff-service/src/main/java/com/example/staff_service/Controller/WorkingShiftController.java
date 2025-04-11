@@ -89,4 +89,18 @@ public class WorkingShiftController {
                 .result(staffs)
                 .build();
     }
+    // Get Shift Id by Date and Hours
+    @GetMapping("/get-shift-id")
+    public ApiResponse<WorkingShift> getShiftIdByDateAndHours(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
+            @RequestParam(required = false) int hours
+    ) {
+        WorkingShift workingShift = workingShiftService.getShiftIdByDateAndHours(date, hours);
+        return ApiResponse.<WorkingShift>builder()
+                .code(200)
+                .message("Success")
+                .result(workingShift)
+                .build();
+    }
+
 }
