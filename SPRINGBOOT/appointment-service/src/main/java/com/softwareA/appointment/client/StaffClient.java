@@ -7,6 +7,7 @@ import com.softwareA.hospital.dto.response.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -18,5 +19,9 @@ public interface StaffClient {
     @GetMapping("/{id}")
     ApiResponse<Doctor> getDoctorById(@RequestParam("id") String id);
     @GetMapping("/working-shifts/{id}")
-    ApiResponse<Shift> getShiftById(@RequestParam("id") String id);
+    ApiResponse<Shift> getShiftById(@PathVariable("id") String id);
+    @GetMapping("/working-shifts")
+    ApiResponse<Shift> getShiftByDateTime(@RequestParam("date") String date,
+                                          @RequestParam("hours") Integer hour);
+
 }

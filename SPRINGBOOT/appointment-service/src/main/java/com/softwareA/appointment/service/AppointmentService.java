@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -167,18 +168,30 @@ public class AppointmentService {
 
     public List<Doctor> getAvailableDoctors(GetAvailableDoctorsDTO dto, Pageable pageable) {
         ApiResponse<List<Doctor>> doctorResponse = null;
+        String shiftId;
         try {
             doctorResponse = this.staffClient.getAvailableDoctors(dto, pageable);
         } catch (Exception e) {
             throw new AppException(ErrorCode.RESOURCE_NOT_FOUND, "Doctors not found");
         }
-//        List<Doctor> doctors = doctorResponse.getResult();
-//        // check if this shift, doctor is available
-//        doctors = doctors.stream().filter(doctor ->
-//                _checkIfAppointmentIsValid(doctor.getId(), dto.getShiftId())
-//        ).toList();
-//        return doctors;
-        return null;
+
+        try {
+            ApiResponse<Shift> shiftResponse = this.staffClient.getShiftByDateTime(dto.getDate().toString(), dto.getHour());
+            Shift shift = Optional.ofNullable(shiftResponse)
+                    .map(ApiResponse::getResult)
+                    .orElseThrow(() -> new AppException(ErrorCode.RESOURCE_NOT_FOUND, "Shift not found"));
+
+            shiftId = Optional.ofNullable(shift.getId())
+                    .orElseThrow(() -> new AppException(ErrorCode.RESOURCE_NOT_FOUND, "Shift ID is missing"));
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.RESOURCE_NOT_FOUND, "Doctors not found");
+        }
+        List<Doctor> doctors = doctorResponse.getResult();
+        // check if this shift, doctor is available
+        doctors = doctors.stream().filter(doctor ->
+                _checkIfAppointmentIsValid(doctor.getId(), shiftId)
+        ).toList();
+        return doctors;
     }
 
     public ApiResponse<List<Department>> getDepartments() {
