@@ -15,6 +15,8 @@ import com.softwareA.hospital.specification.PatientSpecification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -46,18 +48,37 @@ public class PatientService {
         return patientRepository.save(createdPatient);
     }
 
-    public Optional<Patient> getPatientById(UUID patientId) {
+    public Optional<Patient> getPatientById(String userId, String role, UUID patientId) {
+        if (role.equals("USER"))
+        {
+            try {
+                UUID id = UUID.fromString(userId);
+                if (!id.equals(patientId)) {
+                    throw new AppException(ErrorCode.FORBIDDEN);
+                }
+            } catch (IllegalArgumentException e) {
+                throw new AppException(ErrorCode.INVALID_UUID);
+            }
+        }
+        else if (!role.equals("ADMIN") && !role.equals("DOCTOR")) {
+            throw new AppException(ErrorCode.FORBIDDEN);
+        }
         return patientRepository.findById(patientId);
     }
 
-    public List<Patient> getAllPatients(PatientSearchRequest request) {
+    public Page<Patient> getAllPatients(String userId, String userRole, PatientSearchRequest request, Pageable pageable) {
+        //TODO: add authorization check here
         Specification<Patient> spec = PatientSpecification.withFilters(request);
-        return patientRepository.findAll(spec);
+        return patientRepository.findAll(spec, pageable);
     }
 
     // NOT TEST YET
     @Transactional
-    public Patient updatePatientInfo(String userId, UpdatePatientDTO request) {
+    public Patient updatePatientInfo(String userId, String role, UpdatePatientDTO request) {
+        if (!role.equals("USER"))
+        {
+            throw new AppException(ErrorCode.FORBIDDEN, "Only user can update their own profile");
+        }
         UUID patientId;
         try {
             patientId = UUID.fromString(userId);
@@ -96,78 +117,7 @@ public class PatientService {
         return patientRepository.save(patient); // JPA automatically updates if entity exists
     }
 
-    public List<EmergencyContact> getEmergencyContacts(UUID patientId) {
-        return emergencyContactRepository.findByPatientId(patientId);
-    }
 
-    public EmergencyContact createEmergencyContact(String userId, CreateEmergencyContactDTO dto) {
-        UUID patientId;
-        try {
-            patientId = UUID.fromString(userId);
-        } catch (IllegalArgumentException e) {
-            throw new AppException(ErrorCode.INVALID_UUID);
-        }
-        Optional<Patient> patientOptional = patientRepository.findById(patientId);
-        if (patientOptional.isEmpty())
-            throw new AppException(ErrorCode.RESOURCE_NOT_FOUND);
-        EmergencyContact createdEmergencyContact = EmergencyContact.builder()
-                .address(dto.getAddress())
-                .firstName(dto.getFirstName())
-                .lastName(dto.getLastName())
-                .phoneNumber(dto.getPhoneNumber())
-                .relationship(dto.getRelationship())
-                .build();
-        return emergencyContactRepository.save(createdEmergencyContact);
-    }
-
-    public void deleteEmergencyContact(String userId, String contactId) {
-        UUID patientId;
-        try {
-            patientId = UUID.fromString(userId);
-        } catch (IllegalArgumentException e) {
-            throw new AppException(ErrorCode.INVALID_UUID);
-        }
-        Optional<Patient> patientOptional = patientRepository.findById(patientId);
-        if (patientOptional.isEmpty())
-            throw new AppException(ErrorCode.RESOURCE_NOT_FOUND);
-        Optional<EmergencyContact> contact = emergencyContactRepository.findById(contactId);
-        if (contact.isEmpty())
-            throw new AppException(ErrorCode.RESOURCE_NOT_FOUND);
-        emergencyContactRepository.delete(contact.get());
-    }
-
-    public EmergencyContact updateEmergencyContact(String userId, String contactId, UpdateEmergencyContactDTO dto) {
-        UUID patientId;
-        try {
-            patientId = UUID.fromString(userId);
-        } catch (IllegalArgumentException e) {
-            throw new AppException(ErrorCode.INVALID_UUID);
-        }
-        Optional<Patient> patientOptional = patientRepository.findById(patientId);
-        if (patientOptional.isEmpty())
-            throw new AppException(ErrorCode.RESOURCE_NOT_FOUND);
-        Optional<EmergencyContact> contact = emergencyContactRepository.findById(contactId);
-        if (contact.isEmpty())
-            throw new AppException(ErrorCode.RESOURCE_NOT_FOUND);
-
-        EmergencyContact existingContact = contact.get();
-        if (dto.getAddress() != null) {
-            existingContact.setAddress(dto.getAddress());
-        }
-        if (dto.getFirstName() != null) {
-            existingContact.setFirstName(dto.getFirstName());
-        }
-        if (dto.getLastName() != null) {
-            existingContact.setLastName(dto.getLastName());
-        }
-        if (dto.getPhoneNumber() != null) {
-            existingContact.setPhoneNumber(dto.getPhoneNumber());
-        }
-        if (dto.getRelationship() != null) {
-            existingContact.setRelationship(dto.getRelationship());
-        }
-        return emergencyContactRepository.save(existingContact);
-    }
 
 
 }
