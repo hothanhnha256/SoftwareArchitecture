@@ -32,6 +32,7 @@ public class PatientService {
 
     public Patient createPatient(CreatePatientDTO dto) {
         Patient createdPatient = Patient.builder()
+                .id(dto.getId())
                 .dob(dto.getDob())
                 .firstName(dto.getFirstName())
                 .address(dto.getAddress())

@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -16,8 +17,9 @@ import java.time.LocalDate;
 @Builder
 public class CreatePatientDTO {
     @NotNull
+    UUID id;
+    @NotNull
     String firstName;
-
     String lastName;
 
     @NotNull
