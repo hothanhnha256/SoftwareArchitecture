@@ -21,6 +21,7 @@ import java.util.UUID;
 public class Patient {
     @Id
     UUID id;
+
     String lastName;
     @NotNull
     @Column(nullable = false)

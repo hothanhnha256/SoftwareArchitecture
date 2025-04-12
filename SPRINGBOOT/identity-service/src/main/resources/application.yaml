@@ -17,3 +17,7 @@ jwt:
   signerKey: "1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"
   valid-duration: 36000000000
   refreshable-duration: 3600000000 # second
+
+feignclient:
+  patient-service:
+    url: "http://localhost:8900/patient"

@@ -2,6 +2,7 @@ package com.devteria.identity.controller;
 
 import java.util.List;
 
+import com.devteria.identity.dto.request.CreatePatientDTO;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,13 @@ public class UserController {
 
     @PostMapping
     ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.createUser(request))
+                .build();
+    }
+
+    @PostMapping("/create-patient")
+    ApiResponse<UserResponse> createPatient(@RequestBody @Valid UserCreationRequest request, @RequestBody CreatePatientDTO createPatientDTO) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.createUser(request))
                 .build();
