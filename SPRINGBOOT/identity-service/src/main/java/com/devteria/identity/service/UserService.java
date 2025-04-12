@@ -1,7 +1,10 @@
 package com.devteria.identity.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import com.devteria.identity.dto.request.CreatePatientDTO;
+import com.devteria.identity.feignclient.PatientServiceClient;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,13 +35,15 @@ public class UserService {
     private UserRepository userRepository;
     private final UserMapper userMapper;
     private PasswordEncoder passwordEncoder;
+    private PatientServiceClient patientServiceClient;
 
     public UserResponse createUser(UserCreationRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) throw new AppException(ErrorCode.USER_EXISTED);
 
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-
+        user.setCreatedAt(LocalDate.now());
+        user.setUpdatedAt(LocalDate.now());
         user.setRole(Roles.USER);
         try {
             user = userRepository.save(user);
@@ -49,6 +54,27 @@ public class UserService {
 
         return userMapper.toUserResponse(user);
     }
+
+    public UserResponse createPatient(UserCreationRequest request, CreatePatientDTO createPatientDTO) {
+        if (userRepository.existsByUsername(request.getUsername())) throw new AppException(ErrorCode.USER_EXISTED);
+
+        User user = userMapper.toUser(request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setCreatedAt(LocalDate.now());
+        user.setUpdatedAt(LocalDate.now());
+        user.setRole(Roles.USER);
+        try {
+            user = userRepository.save(user);
+            patientServiceClient.createPatient(createPatientDTO);
+        } catch (DataIntegrityViolationException exception) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
+        log.info("User created: {}", user);
+
+        return userMapper.toUserResponse(user);
+    }
+
+
 
     public UserResponse getMyInfo() {
         var context = SecurityContextHolder.getContext();
@@ -62,6 +88,10 @@ public class UserService {
     @PreAuthorize("hasRole('ADMIN')")
     public UserResponse updateUser(String userId, UserUpdateRequest request) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        user.setUpdatedAt(LocalDate.now());
+
+
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
