@@ -2,6 +2,7 @@ package com.devteria.identity.controller;
 
 import java.util.List;
 
+import com.devteria.identity.dto.request.CreatePatientAccount;
 import com.devteria.identity.dto.request.CreatePatientDTO;
 import jakarta.validation.Valid;
 
@@ -34,9 +35,9 @@ public class UserController {
     }
 
     @PostMapping("/create-patient")
-    ApiResponse<UserResponse> createPatient(@RequestBody @Valid UserCreationRequest request, @RequestBody CreatePatientDTO createPatientDTO) {
+    ApiResponse<UserResponse> createPatient(@RequestBody @Valid CreatePatientAccount request) {
         return ApiResponse.<UserResponse>builder()
-                .result(userService.createUser(request))
+                .result(userService.createPatient(request))
                 .build();
     }
 

@@ -5,6 +5,7 @@ import com.devteria.identity.model.Sex;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,9 +18,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreatePatientDTO {
-    @NotNull
-    UUID id;
+public class CreatePatientAccount {
+    @Size(min = 4, message = "USERNAME_INVALID")
+    String username;
+
+    @Size(min = 6, message = "INVALID_PASSWORD")
+    String password;
 
     @NotNull
     String firstName;

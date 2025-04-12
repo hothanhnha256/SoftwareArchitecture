@@ -12,22 +12,23 @@ services:
       POSTGRES_DB: patient_db
     volumes:
       - patient-postgres:/var/lib/postgresql/data
-      -
+
   hospital-postgres:
     image: postgres:17
-    container_name: patient-postgres
+    container_name: hospital-postgres
     restart: always
     ports:
-      - "5440:5432"
+      - "5441:5432"
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: patient_db
+      POSTGRES_DB: hospital_db
     volumes:
-      - patient-postgres:/var/lib/postgresql/data
+      - hospital-postgres:/var/lib/postgresql/data
 
 
 volumes:
   identity-postgres:
   profile-postgres:
   patient-postgres:
+  hospital-postgres:

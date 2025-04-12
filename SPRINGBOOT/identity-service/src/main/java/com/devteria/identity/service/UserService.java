@@ -2,9 +2,13 @@ package com.devteria.identity.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
+import com.devteria.identity.dto.request.CreatePatientAccount;
 import com.devteria.identity.dto.request.CreatePatientDTO;
 import com.devteria.identity.feignclient.PatientServiceClient;
+import com.devteria.identity.mapper.PatientMapper;
+import feign.FeignException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +29,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -34,6 +39,7 @@ public class UserService {
 
     private UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PatientMapper patientMapper;
     private PasswordEncoder passwordEncoder;
     private PatientServiceClient patientServiceClient;
 
@@ -55,22 +61,44 @@ public class UserService {
         return userMapper.toUserResponse(user);
     }
 
-    public UserResponse createPatient(UserCreationRequest request, CreatePatientDTO createPatientDTO) {
-        if (userRepository.existsByUsername(request.getUsername())) throw new AppException(ErrorCode.USER_EXISTED);
+    @Transactional
+    public UserResponse createPatient(CreatePatientAccount request) {
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
 
-        User user = userMapper.toUser(request);
+        UserCreationRequest userCreationRequest = patientMapper.toUserCreationRequest(request);
+        User user = userMapper.toUser(userCreationRequest);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setCreatedAt(LocalDate.now());
         user.setUpdatedAt(LocalDate.now());
         user.setRole(Roles.USER);
+
         try {
             user = userRepository.save(user);
-            patientServiceClient.createPatient(createPatientDTO);
-        } catch (DataIntegrityViolationException exception) {
-            throw new AppException(ErrorCode.USER_EXISTED);
-        }
-        log.info("User created: {}", user);
 
+            CreatePatientDTO createPatientDTO = patientMapper.toCreatePatientDTO(request);
+            createPatientDTO.setId(UUID.fromString(user.getId()));
+
+            try {
+                patientServiceClient.createPatient(createPatientDTO);
+            } catch (FeignException ex) {
+                log.error("Failed to create patient for user {}: {}", user.getId(), ex.getMessage());
+                // Log chi tiết về mã lỗi và chuyển hướng nếu có
+                if (ex.status() >= 300 && ex.status() < 400) {
+                    log.error("Redirect detected. Check if URL or server configuration has changed.");
+                }
+                throw new AppException(ErrorCode.FAILED_TO_CREATE_PATIENT);
+            }
+
+        } catch (DataIntegrityViolationException ex) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        } catch (Exception ex) {
+            log.error("Unexpected error: {}", ex.getMessage());
+            throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+
+        log.info("User created: {}", user);
         return userMapper.toUserResponse(user);
     }
 
