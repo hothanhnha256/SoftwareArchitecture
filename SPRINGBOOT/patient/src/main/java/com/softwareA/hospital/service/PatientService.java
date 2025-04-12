@@ -15,6 +15,7 @@ import com.softwareA.hospital.specification.PatientSpecification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,6 +27,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PatientService {
     private final PatientRepository patientRepository;
     private final EmergencyContactRepository emergencyContactRepository;
@@ -46,6 +48,7 @@ public class PatientService {
                 .lastName(dto.getLastName())
                 .build();
 
+        log.info("Creating patient with ID: {}", dto.getId());
         return patientRepository.save(createdPatient);
     }
 
