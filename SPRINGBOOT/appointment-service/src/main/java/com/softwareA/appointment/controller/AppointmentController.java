@@ -4,8 +4,10 @@ import com.softwareA.appointment.dto.request.CreateAppointmentDTO;
 import com.softwareA.appointment.dto.request.GetAppointmentsDTO;
 import com.softwareA.appointment.dto.request.GetAvailableDoctorsDTO;
 import com.softwareA.appointment.dto.request.UpdateAppointmentDTO;
+import com.softwareA.appointment.dto.response.AppointmentDetailDTO;
 import com.softwareA.appointment.exception.AppException;
 import com.softwareA.appointment.exception.ErrorCode;
+import com.softwareA.appointment.model.Department;
 import com.softwareA.appointment.model.appointment.Appointment;
 import com.softwareA.appointment.model.staff.Doctor;
 import com.softwareA.appointment.service.AppointmentService;
@@ -36,25 +38,29 @@ public class AppointmentController {
         return appointmentService.testFeign();
     }
 
+    @GetMapping("/departments")
+    public ResponseEntity<ApiResponse<List<Department>>> getDepartments() {
+        log.info("getDepartments");
+        ApiResponse<List<Department>> departments = this.appointmentService.getDepartments();
+        return ResponseEntity.ok().body(departments);
+    }
+
     @GetMapping("/available-doctors")
     public ResponseEntity<ApiResponse<List<Doctor>>> getAvailableSchedules(@ModelAttribute GetAvailableDoctorsDTO dto,
                                                                            @PageableDefault(size = 15, page = 0) Pageable pageable) {
         log.info("getAvailableDoctors");
         // TÌM 1 LIST DOCTOR dựa trên khoa khám + ngày khám (shift)
-        ApiResponse<List<Doctor>> doctors = this.appointmentService.getAvailableDoctors(dto, pageable);
+        List<Doctor> doctors = this.appointmentService.getAvailableDoctors(dto, pageable);
         return ResponseEntity.ok().body(ApiResponse.<List<Doctor>>builder()
-                .limit(doctors.getLimit())
-                .page(doctors.getPage())
-                .total(doctors.getTotal())
-                .result(doctors.getResult())
+                .result(doctors)
                 .build());
     }
 
     @GetMapping("/all")
     public ResponseEntity<ApiResponse<List<Appointment>>> getAppointments(@RequestHeader(name = "UserId") String userId,
-                                                                          @RequestHeader(name = "UserRole") String role,
-                                                                          @ModelAttribute GetAppointmentsDTO dto,
-                                                                          @PageableDefault(size = 10, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+                                                                                   @RequestHeader(name = "UserRole") String role,
+                                                                                   @ModelAttribute GetAppointmentsDTO dto,
+                                                                                   @PageableDefault(size = 10, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         log.info("getAppointments");
         UUID userUUID;
         try {
@@ -83,6 +89,7 @@ public class AppointmentController {
         } catch (IllegalArgumentException e) {
             throw new AppException(ErrorCode.INVALID_UUID);
         }
+
 
         Appointment createdAppointment = appointmentService.createAppointment(patientId, role, dto);
         return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(ApiResponse.<Appointment>builder().result(createdAppointment).build());

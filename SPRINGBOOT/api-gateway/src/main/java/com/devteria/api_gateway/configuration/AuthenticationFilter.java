@@ -54,6 +54,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             put("/identity/users", Set.of("GET")); // Only GET is allowed
             put("/patient/", Set.of("POST")); // Only POST is allowed
             put("/appointment/test-patient-feign", Set.of("GET")); // Only GET is allowed
+            put("/appointment/departments", Set.of("GET")); // Only GET is allowed
         }
     };
 

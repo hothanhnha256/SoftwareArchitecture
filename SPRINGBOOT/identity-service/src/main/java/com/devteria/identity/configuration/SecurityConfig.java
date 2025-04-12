@@ -1,5 +1,7 @@
 package com.devteria.identity.configuration;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,8 +18,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.List;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -26,12 +26,8 @@ public class SecurityConfig {
     private CustomJwtDecoder customJwtDecoder;
 
     private static final String[] PUBLIC_ENDPOINTS = {
-            //This is for public url
-            "/auth/token",
-            "/users/my-info",
-            "/users/**",
-            "/users",
-            "/auth/**"
+        // This is for public url
+        "/auth/token", "/users/my-info", "/users/**", "/users", "/auth/**"
     };
 
     @Bean
@@ -60,8 +56,7 @@ public class SecurityConfig {
                 "http://localhost:3000",
                 "http://localhost:3001",
                 "http://localhost:8080",
-                "https://back-khoa-active-project.vercel.app"
-        ));
+                "https://back-khoa-active-project.vercel.app"));
         corsConfiguration.addAllowedMethod("*");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.setAllowCredentials(true); // Bật thông tin xác thực (nếu cần)

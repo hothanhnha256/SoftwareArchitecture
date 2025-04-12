@@ -1,7 +1,5 @@
 package com.devteria.identity.configuration;
 
-import java.util.HashSet;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -38,8 +36,7 @@ public class ApplicationInitConfig {
     @ConditionalOnProperty(
             prefix = "spring",
             value = "datasource.driver-class-name",
-            havingValue = "org.postgresql.Driver"
-    )
+            havingValue = "org.postgresql.Driver")
     ApplicationRunner applicationRunner(UserRepository userRepository) {
         return args -> {
             if (userRepository.findByUsername(ADMIN_USER_NAME).isEmpty()) {
@@ -51,8 +48,7 @@ public class ApplicationInitConfig {
                         .build();
                 userRepository.save(user);
                 log.warn("admin user has been created with default password: admin, please change it");
-            }
-            else{
+            } else {
                 log.warn("admin user already exists");
             }
             log.info("Application initialization completed .....");

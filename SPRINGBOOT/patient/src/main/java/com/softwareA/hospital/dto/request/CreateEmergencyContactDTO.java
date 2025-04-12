@@ -25,6 +25,4 @@ public class CreateEmergencyContactDTO {
     @NotNull
     EmergencyContactRelationship relationship;
 
-    @NotNull
-    String patientId;
 }

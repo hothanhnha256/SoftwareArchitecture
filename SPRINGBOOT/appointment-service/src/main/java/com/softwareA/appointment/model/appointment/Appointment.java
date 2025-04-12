@@ -3,6 +3,8 @@ package com.softwareA.appointment.model.appointment;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.softwareA.appointment.model.staff.Doctor;
+import com.softwareA.appointment.model.staff.Shift;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -19,9 +21,9 @@ public class Appointment {
     @Column(nullable = false)
     UUID patientId;
     @Column(nullable = false)
-    UUID doctorId;
+    String doctorId;
     @Column(nullable = false)
-    UUID shiftId;
+    String shiftId;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING) // Store as a string in DB
     AppointmentStatus status;
@@ -38,6 +40,10 @@ public class Appointment {
         updatedAt = createdAt;
         status = AppointmentStatus.WAITING;
     }
+    @Transient
+    Doctor doctor;
+    @Transient
+    Shift shift;
 
     @PreUpdate
     protected void onUpdate() {

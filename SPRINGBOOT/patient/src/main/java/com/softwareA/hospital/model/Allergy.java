@@ -1,5 +1,4 @@
 package com.softwareA.hospital.model;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;

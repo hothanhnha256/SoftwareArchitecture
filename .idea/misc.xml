@@ -8,8 +8,19 @@
         <option value="$PROJECT_DIR$/SPRINGBOOT/profile-service/pom.xml" />
         <option value="$PROJECT_DIR$/SPRINGBOOT/patient/pom.xml" />
         <option value="$PROJECT_DIR$/SPRINGBOOT/api-gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/SPRINGBOOT/schedule/pom.xml" />
+        <option value="$PROJECT_DIR$/SPRINGBOOT/schedule-service/pom.xml" />
+        <option value="$PROJECT_DIR$/SPRINGBOOT/appointment-service/pom.xml" />
         <option value="$PROJECT_DIR$/SPRINGBOOT/identity-service/pom.xml" />
+        <option value="$PROJECT_DIR$/SPRINGBOOT/hospital-service/pom.xml" />
+        <option value="$PROJECT_DIR$/SPRINGBOOT/staff-service/staff-service/pom.xml" />
+        <option value="$PROJECT_DIR$/SPRINGBOOT/staff-service/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/SPRINGBOOT/staff-service/staff-service/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="21" project-jdk-type="JavaSDK">

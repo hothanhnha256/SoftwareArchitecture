@@ -1,5 +1,5 @@
 server:
-  port: 8900
+  port: 8902
   servlet:
     context-path: /hospital
 spring:
@@ -17,7 +17,7 @@ spring:
 
 app:
   services:
-    patient: http://localhost:8990/hospital
+    patient: http://localhost:8902/hospital
 
 
 #  security:

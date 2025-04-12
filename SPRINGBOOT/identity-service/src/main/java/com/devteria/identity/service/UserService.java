@@ -1,16 +1,14 @@
 package com.devteria.identity.service;
 
-import java.util.HashSet;
 import java.util.List;
 
-import com.devteria.identity.constant.Roles;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.devteria.identity.constant.Roles;
 import com.devteria.identity.dto.request.UserCreationRequest;
 import com.devteria.identity.dto.request.UserUpdateRequest;
 import com.devteria.identity.dto.response.UserResponse;
@@ -41,7 +39,6 @@ public class UserService {
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-
         user.setRole(Roles.USER);
         try {
             user = userRepository.save(user);
@@ -49,7 +46,6 @@ public class UserService {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
         log.info("User created: {}", user);
-
 
         return userMapper.toUserResponse(user);
     }
