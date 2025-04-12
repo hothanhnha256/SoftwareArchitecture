@@ -1,8 +1,8 @@
 package com.softwareA.patient.utils;
 
 
-import com.softwareA.hospital.exception.AppException;
-import com.softwareA.hospital.exception.ErrorCode;
+import com.softwareA.patient.exception.AppException;
+import com.softwareA.patient.exception.ErrorCode;
 
 import java.util.UUID;
 

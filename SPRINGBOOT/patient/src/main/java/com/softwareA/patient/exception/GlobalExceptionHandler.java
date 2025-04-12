@@ -1,4 +1,4 @@
-package com.softwareA.appointment.exception;
+package com.softwareA.patient.exception;
 
 import java.nio.file.AccessDeniedException;
 import java.util.Map;
@@ -21,48 +21,39 @@ public class GlobalExceptionHandler {
 
     private static final String MIN_ATTRIBUTE = "min";
 
-    @ExceptionHandler(value = RuntimeException.class)
+    @ExceptionHandler(value = Exception.class)
     ResponseEntity<ApiResponse> handlingRuntimeException(RuntimeException exception) {
         log.error("Exception: ", exception);
         ApiResponse apiResponse = new ApiResponse();
+
         apiResponse.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
         apiResponse.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
-        return ResponseEntity.badRequest().body(apiResponse);
-    }
 
-    @ExceptionHandler(value = IllegalArgumentException.class)
-    ResponseEntity<ApiResponse> handlingIllegalArgumentException(IllegalArgumentException exception) {
-        log.error("Exception: ", exception);
-        ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setCode(400);
-        apiResponse.setMessage(exception.getMessage());
         return ResponseEntity.badRequest().body(apiResponse);
     }
 
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
-    ResponseEntity<ApiResponse> handlingRuntimeException(HttpMessageNotReadableException exception) {
+    ResponseEntity<ApiResponse> handlingHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
         log.error("Exception: ", exception);
         ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setCode(400);
+        apiResponse.setCode(9999);
         apiResponse.setMessage(exception.getMessage());
         return ResponseEntity.badRequest().body(apiResponse);
     }
 
     @ExceptionHandler(value = AppException.class)
     ResponseEntity<ApiResponse> handlingAppException(AppException exception) {
-        log.error("Exception: ", exception);
         ErrorCode errorCode = exception.getErrorCode();
         ApiResponse apiResponse = new ApiResponse();
 
         apiResponse.setCode(errorCode.getCode());
-        apiResponse.setMessage(exception.getMessage() != null ? exception.getMessage() : errorCode.getMessage());
+        apiResponse.setMessage(errorCode.getMessage());
 
         return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
     }
 
     @ExceptionHandler(value = AccessDeniedException.class)
     ResponseEntity<ApiResponse> handlingAccessDeniedException(AccessDeniedException exception) {
-        log.error("Exception: ", exception);
         ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
 
         return ResponseEntity.status(errorCode.getStatusCode())
@@ -74,12 +65,38 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     ResponseEntity<ApiResponse> handlingValidation(MethodArgumentNotValidException exception) {
-        log.error("Exception: ", exception);
+        String enumKey = exception.getFieldError().getDefaultMessage();
+
+        ErrorCode errorCode = ErrorCode.INVALID_KEY;
+        Map<String, Object> attributes = null;
+        try {
+            errorCode = ErrorCode.valueOf(enumKey);
+
+            var constraintViolation =
+                    exception.getBindingResult().getAllErrors().getFirst().unwrap(ConstraintViolation.class);
+
+            attributes = constraintViolation.getConstraintDescriptor().getAttributes();
+
+            log.info(attributes.toString());
+
+        } catch (IllegalArgumentException e) {
+
+        }
+
         ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setCode(400);
-        apiResponse.setMessage(exception.getFieldError().getDefaultMessage());
+
+        apiResponse.setCode(errorCode.getCode());
+        apiResponse.setMessage(
+                Objects.nonNull(attributes)
+                        ? mapAttribute(errorCode.getMessage(), attributes)
+                        : errorCode.getMessage());
+
         return ResponseEntity.badRequest().body(apiResponse);
     }
 
+    private String mapAttribute(String message, Map<String, Object> attributes) {
+        String minValue = String.valueOf(attributes.get(MIN_ATTRIBUTE));
 
+        return message.replace("{" + MIN_ATTRIBUTE + "}", minValue);
+    }
 }

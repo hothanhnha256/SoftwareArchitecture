@@ -14,10 +14,9 @@ import lombok.experimental.FieldDefaults;
 public class ApiResponse<T> {
     @Builder.Default
     private int code = 1000;
-
-    private String message;
     private Integer limit;
     private Integer page;
     private Integer total;
+    private String message;
     private T result;
 }

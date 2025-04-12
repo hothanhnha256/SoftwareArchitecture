@@ -1,7 +1,7 @@
 package com.softwareA.appointment.client;
 
 import com.softwareA.appointment.model.Department;
-import com.softwareA.hospital.dto.response.ApiResponse;
+import com.softwareA.patient.dto.response.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 

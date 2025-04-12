@@ -1,4 +1,4 @@
-package com.softwareA.appointment.exception;
+package com.softwareA.patient.exception;
 
 import java.nio.file.AccessDeniedException;
 import java.util.Map;
@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
         ApiResponse apiResponse = new ApiResponse();
 
         apiResponse.setCode(errorCode.getCode());
-        apiResponse.setMessage(exception.getMessage() != null ? exception.getMessage() : errorCode.getMessage());
+        apiResponse.setMessage(errorCode.getMessage());
 
         return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
     }
@@ -81,5 +81,5 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(apiResponse);
     }
 
-
+   
 }

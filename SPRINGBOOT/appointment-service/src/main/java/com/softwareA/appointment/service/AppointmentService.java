@@ -18,7 +18,7 @@ import com.softwareA.appointment.model.staff.Shift;
 import com.softwareA.appointment.repository.AppointmentRepository;
 import com.softwareA.appointment.specification.AppointmentSpecification;
 import com.softwareA.appointment.strategy.AppointmentUpdateStrategy;
-import com.softwareA.hospital.dto.response.ApiResponse;
+import com.softwareA.patient.dto.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
