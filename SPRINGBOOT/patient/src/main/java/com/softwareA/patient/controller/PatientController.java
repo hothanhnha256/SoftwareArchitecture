@@ -9,6 +9,7 @@ import com.softwareA.patient.exception.AppException;
 import com.softwareA.patient.exception.ErrorCode;
 import com.softwareA.patient.model.Patient;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,11 +33,10 @@ public class PatientController {
     // FIND PATIENT BY NAME, CITIZEN ID, HEALTH INSURANCE NUM, database ID,
     // phoneNumber
     @GetMapping("/all")
-    public ResponseEntity<ApiResponse<List<Patient>>> getAllPatients(PatientSearchRequest request,
+    public ResponseEntity<ApiResponse<List<Patient>>> getAllPatients(@Nullable PatientSearchRequest request,
                                                                      @RequestHeader("UserId") String UserId,
                                                                      @RequestHeader("UserRole") String Role,
                                                                      @PageableDefault(size = 20, page = 0) Pageable pageable) {
-        System.out.print(request.toString());
         log.info(pageable.toString());
         log.info(request.toString());
         log.info(UserId);
