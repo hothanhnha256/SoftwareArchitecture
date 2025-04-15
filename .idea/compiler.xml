@@ -10,6 +10,28 @@
         <module name="api-gateway" />
         <module name="staff-service" />
       </profile>
+      <profile name="Annotation profile for appointment" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
+        </processorPath>
+        <module name="appointment-service" />
+      </profile>
+      <profile name="Annotation profile for patient" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
+        </processorPath>
+        <module name="schedule" />
+        <module name="appointment" />
+        <module name="hospital" />
+        <module name="patient" />
+      </profile>
       <profile name="Annotation profile for profile-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -26,20 +48,9 @@
         <module name="identity-service" />
         <module name="profile-service" />
       </profile>
-      <profile name="Annotation profile for patient" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
-        </processorPath>
-        <module name="schedule" />
-        <module name="appointment" />
-        <module name="hospital" />
-        <module name="patient" />
-      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="billing-service" target="21" />
       <module name="school" target="21" />
     </bytecodeTargetLevel>
   </component>
@@ -47,6 +58,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api-gateway" options="-parameters" />
       <module name="appointment" options="-parameters" />
+      <module name="appointment-service" options="-parameters" />
       <module name="hospital" options="-parameters" />
       <module name="identity-service" options="-parameters -Amapstruct.suppressGeneratorTimestamp=true -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="patient" options="-parameters" />

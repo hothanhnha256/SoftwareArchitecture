@@ -7,6 +7,8 @@ import com.example.staff_service.Repository.StaffRepository;
 import com.example.staff_service.Repository.WorkingShiftRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -16,21 +18,23 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class WorkingShiftScheduler {
+    private static final Logger log = LoggerFactory.getLogger(WorkingShiftScheduler.class);
     private final WorkingShiftRepository workingShiftRepository;
     private final StaffRepository staffRepository;
 
     @Scheduled(cron = "0 0 0 ? * MON")
 //    @Scheduled(cron = "0 * * * * ?")
     public void autoCreateWorkingShift() {
+        log.info("Tạo ca làm việc tự động cho ngày hôm nay + 7");
         // Ngày hôm nay + 7
         Calendar calendar = Calendar.getInstance();
 //        calendar.add(Calendar.DATE, 7);
         Date targetDate = normalizeDate(calendar.getTime()); // set về 00:00:00
 
-        // Giờ làm việc: 7-11 và 13-15
+        // Giờ làm việc: 7-11 và 13-1
         List<Integer> workingHours = new ArrayList<>();
         for (int hour = 7; hour <= 11; hour++) workingHours.add(hour);
-        for (int hour = 13; hour <= 15; hour++) workingHours.add(hour);
+        for (int hour = 13; hour <= 17; hour++) workingHours.add(hour);
 
         // Lấy tất cả ID nhân viên
         List<String> allStaffIds = staffRepository.findAll()
@@ -62,9 +66,9 @@ public class WorkingShiftScheduler {
         cal.set(Calendar.MILLISECOND, 0);
         return cal.getTime();
     }
-//    @PostConstruct
-//    public void runOnStartup() {
-//        // Gọi phương thức autoCreateWorkingShift() khi ứng dụng khởi động
-//        autoCreateWorkingShift();
-//    }
+    @PostConstruct
+    public void runOnStartup() {
+        // Gọi phương thức autoCreateWorkingShift() khi ứng dụng khởi động
+        autoCreateWorkingShift();
+    }
 }
