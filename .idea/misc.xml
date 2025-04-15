@@ -15,10 +15,12 @@
         <option value="$PROJECT_DIR$/SPRINGBOOT/hospital-service/pom.xml" />
         <option value="$PROJECT_DIR$/SPRINGBOOT/staff-service/staff-service/pom.xml" />
         <option value="$PROJECT_DIR$/SPRINGBOOT/staff-service/pom.xml" />
+        <option value="$PROJECT_DIR$/SPRINGBOOT/billing-service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
+        <option value="$PROJECT_DIR$/SPRINGBOOT/profile-service/pom.xml" />
         <option value="$PROJECT_DIR$/SPRINGBOOT/staff-service/staff-service/pom.xml" />
       </set>
     </option>

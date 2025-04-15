@@ -3,6 +3,8 @@ package com.example.staff_service.Service;
 
 import com.example.staff_service.Entity.Staff;
 import com.example.staff_service.Repository.StaffRepository;
+import com.example.staff_service.exception.AppException;
+import com.example.staff_service.exception.ErrorCode;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -32,6 +34,9 @@ public class StaffService {
 
 
     public Staff createStaff(Staff staff) {
+        this.getStaffById(staff.getId()).ifPresent(existingStaff -> {
+            throw new AppException(ErrorCode.CONFLICT, "Staff with ID " + staff.getId() + " already exists.");
+        });
         return staffRepository.save(staff);
     }
 
