@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -20,12 +21,16 @@ import java.util.UUID;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Document(collection = "workingShift")
+@CompoundIndex(name = "unique_date_hours", def = "{'date' : 1, 'hours': 1}", unique = true)
 public class WorkingShift {
     @Id
     String id;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     Date date;
+
     int hours;
+
     List<String> listStaff;
 
     public WorkingShift(Date date, int hours, List<String> listStaff) {

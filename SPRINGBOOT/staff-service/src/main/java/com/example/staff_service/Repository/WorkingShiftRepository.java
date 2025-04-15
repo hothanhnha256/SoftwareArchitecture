@@ -23,4 +23,5 @@ public interface WorkingShiftRepository extends MongoRepository<WorkingShift, St
     @Query("{ 'date': { $gte: ?0, $lt: ?1 }, 'hours': ?2 }")
     Optional<WorkingShift> findOneByDateRangeAndHours(Date start, Date end, int hours);
 
+    Optional<WorkingShift> findByDateAndHours(Date targetDate, int hour);
 }
