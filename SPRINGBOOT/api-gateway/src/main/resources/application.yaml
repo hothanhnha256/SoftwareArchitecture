@@ -3,6 +3,8 @@ server:
 app:
   prefix-api: /api/v1
   prefix-num: 2
+identity:
+  base-url: http://localhost:8080/identity
 spring:
   config:
     import: "optional:configserver:"

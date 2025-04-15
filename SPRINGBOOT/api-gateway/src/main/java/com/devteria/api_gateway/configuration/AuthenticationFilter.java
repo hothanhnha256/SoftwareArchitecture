@@ -41,12 +41,6 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     IdentityService identityService;
     ObjectMapper objectMapper;
 
-    // @NonFinal
-    // private String[] publicEndpoints = {
-    // "/identity/auth/.*",
-    // "/identity/users",
-    // };
-
     @NonFinal
     private final Map<String, Set<String>> publicEndpoints = new HashMap<>() {
         {
@@ -67,12 +61,13 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         log.info("Enter authentication filter....");
-
+        // return default chain if the request is a public endpoint
         if (isPublicEndpoint(exchange.getRequest()))
             return chain.filter(exchange);
 
         // Get token from authorization header
         List<String> authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION);
+
         if (CollectionUtils.isEmpty(authHeader))
             return unauthenticated(exchange.getResponse());
 
@@ -83,7 +78,6 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             log.info(introspectResponse.toString());
             if (introspectResponse.getResult().isValid()) {
                 log.info(introspectResponse.getResult().toString());
-                log.info("hjere");
                 return identityService.myinfo(token).flatMap(userResponse -> { // truyền token vào myinfo()
                     log.info("UserId " + userResponse.getResult().getId().toString());
                     log.info("UserRole " + userResponse.getResult().getRole().toString());
@@ -121,11 +115,11 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     private boolean isPublicEndpoint(ServerHttpRequest request) {
         String path = request.getURI().getPath();
         String method = request.getMethod().toString(); // Get HTTP method (e.g., GET, POST)
-    
+
         return publicEndpoints.entrySet().stream()
                 .anyMatch(entry -> path.matches(apiPrefix + entry.getKey()) && entry.getValue().contains(method));
     }
-    
+
 
     Mono<Void> unauthenticated(ServerHttpResponse response) {
         ApiResponse<?> apiResponse = ApiResponse.builder()
@@ -141,7 +135,6 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         }
 
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
-        response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
         return response.writeWith(
                 Mono.just(response.bufferFactory().wrap(body.getBytes())));
