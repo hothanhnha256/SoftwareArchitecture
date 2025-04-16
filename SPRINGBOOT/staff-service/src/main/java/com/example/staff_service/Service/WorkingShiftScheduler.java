@@ -57,6 +57,44 @@ public class WorkingShiftScheduler {
 
         System.out.println("✅ Đã tạo xong ca làm việc cho ngày " + targetDate);
     }
+    @Scheduled(cron = "0 0 0 ? * MON")
+    public void autoCreateWorkingShiftForNext30Days() {
+        log.info("🔄 Bắt đầu tạo ca làm việc tự động cho 30 ngày tiếp theo");
+
+        // Giờ làm việc: 7-11 và 13-17
+        List<Integer> workingHours = new ArrayList<>();
+        for (int hour = 7; hour <= 11; hour++) workingHours.add(hour);
+        for (int hour = 13; hour <= 17; hour++) workingHours.add(hour);
+
+        // Lấy danh sách tất cả ID nhân viên
+        List<String> allStaffIds = staffRepository.findAll()
+                .stream()
+                .map(Staff::getId)
+                .collect(Collectors.toList());
+
+        Calendar calendar = Calendar.getInstance();
+
+        for (int i = 0; i < 30; i++) {
+            Date targetDate = normalizeDate(calendar.getTime());
+
+            for (int hour : workingHours) {
+                try {
+                    Optional<WorkingShift> existing = workingShiftRepository.findByDateAndHours(targetDate, hour);
+                    if (existing.isPresent()) continue;
+
+                    WorkingShift newShift = new WorkingShift(targetDate, hour, allStaffIds);
+                    workingShiftRepository.save(newShift);
+                } catch (Exception e) {
+                    System.out.println("❌ Không thể tạo shift ngày " + targetDate + " - giờ " + hour + ": " + e.getMessage());
+                }
+            }
+
+            calendar.add(Calendar.DATE, 1); // Tăng sang ngày tiếp theo
+        }
+
+        System.out.println("✅ Đã tạo xong ca làm việc cho 30 ngày tiếp theo");
+    }
+
     private Date normalizeDate(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -66,9 +104,10 @@ public class WorkingShiftScheduler {
         cal.set(Calendar.MILLISECOND, 0);
         return cal.getTime();
     }
-    @PostConstruct
-    public void runOnStartup() {
-        // Gọi phương thức autoCreateWorkingShift() khi ứng dụng khởi động
-        autoCreateWorkingShift();
-    }
+//    @PostConstruct
+//    public void runOnStartup() {
+//        // Gọi phương thức autoCreateWorkingShift() khi ứng dụng khởi động
+//        autoCreateWorkingShift();
+    //    autoCreateWorkingShiftForNext30Days();
+//    }
 }

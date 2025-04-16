@@ -10,16 +10,6 @@
         <module name="api-gateway" />
         <module name="staff-service" />
       </profile>
-      <profile name="Annotation profile for appointment" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
-        </processorPath>
-        <module name="appointment-service" />
-      </profile>
       <profile name="Annotation profile for patient" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -30,6 +20,7 @@
         <module name="schedule" />
         <module name="appointment" />
         <module name="hospital" />
+        <module name="appointment-service" />
         <module name="patient" />
       </profile>
       <profile name="Annotation profile for profile-service" enabled="true">
