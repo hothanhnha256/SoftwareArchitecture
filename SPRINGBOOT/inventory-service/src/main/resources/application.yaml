@@ -1,0 +1,28 @@
+server:
+  port: 8903
+  servlet:
+    context-path: /inventory
+spring:
+  datasource:
+    url: "jdbc:postgresql://localhost:5442/inventory_db"
+    driverClassName: "org.postgresql.Driver"
+    username: user
+    password: 123456
+
+  jpa:
+
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+app:
+  services:
+    inventory: http://localhost:8903/inventory
+
+appointment-service:
+    url: http://localhost:8901/appointment
+
+#  security:
+#    user:
+#      name: admin
+#      password: admin

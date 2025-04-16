@@ -16,6 +16,7 @@
         <option value="$PROJECT_DIR$/SPRINGBOOT/staff-service/staff-service/pom.xml" />
         <option value="$PROJECT_DIR$/SPRINGBOOT/staff-service/pom.xml" />
         <option value="$PROJECT_DIR$/SPRINGBOOT/billing-service/pom.xml" />
+        <option value="$PROJECT_DIR$/SPRINGBOOT/inventory-service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

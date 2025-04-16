@@ -48,6 +48,18 @@ services:
       POSTGRES_DB: appointment_db
     volumes:
       - appointment-postgres:/var/lib/postgresql/data
+  inventory-postgres:
+    image: postgres:17
+    container_name: inventory-postgres
+    restart: always
+    ports:
+      - "5442:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: inventory_db
+    volumes:
+      - inventory-postgres:/var/lib/postgresql/data
   staff-mongo:
     image: mongo:6
     container_name: staff-mongo
@@ -78,3 +90,4 @@ volumes:
   patient-postgres:
   appointment-postgres:
   staff-mongo-data:
+  inventory-postgres:

@@ -1,7 +1,7 @@
 package com.devteria.api_gateway.service;
 
 
-import com.devteria.api_gateway.dto.ApiResponse;
+import com.devteria.api_gateway.dto.response.ApiResponse;
 import com.devteria.api_gateway.dto.request.IntrospectRequest;
 import com.devteria.api_gateway.dto.response.IntrospectResponse;
 import com.devteria.api_gateway.dto.response.UserResponse;

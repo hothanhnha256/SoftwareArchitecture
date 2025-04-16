@@ -1,33 +1,29 @@
 package com.devteria.api_gateway.configuration;
 
-import com.devteria.api_gateway.dto.ApiResponse;
-import com.devteria.api_gateway.dto.response.UserResponse;
+import com.devteria.api_gateway.dto.response.ApiResponse;
 import com.devteria.api_gateway.service.IdentityService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.netty.handler.codec.http.HttpResponseStatus;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-import reactor.netty.http.server.HttpServerResponse;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +36,8 @@ import java.util.Set;
 public class AuthenticationFilter implements GlobalFilter, Ordered {
     IdentityService identityService;
     ObjectMapper objectMapper;
+    @Qualifier("fallbackWebClient")
+    WebClient fallbackClient;
 
     @NonFinal
     private final Map<String, Set<String>> publicEndpoints = new HashMap<>() {
@@ -50,7 +48,6 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             put("/appointment/test-patient-feign", Set.of("GET")); // Only GET is allowed
             put("/appointment/departments", Set.of("GET")); // Only GET is allowed
             put("/identity/users/create-patient", Set.of("POST")); // Only GET is allowed
-            put("/patient/", Set.of("POST")); // Only POST is allowed
         }
     };
 
@@ -97,8 +94,8 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
                 return unauthenticated(exchange.getResponse());
             }
         }).onErrorResume(throwable -> {
-            log.error(throwable.getMessage());
-            return unauthenticated(exchange.getResponse());
+            log.error("Error during authentication: here");
+            return serviceUnavailable(exchange.getResponse());
         });
     }
 
@@ -120,22 +117,34 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
                 .anyMatch(entry -> path.matches(apiPrefix + entry.getKey()) && entry.getValue().contains(method));
     }
 
+    Mono<Void> serviceUnavailable(ServerHttpResponse response) {
+        ApiResponse<Void> fallbackResponse = ApiResponse.<Void>builder()
+                .message("Identity service is currently unavailable. Please try again later.")
+                .build();
+        // Return the fallback response as a Mono to write it to the response body
+        response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+        String body = null;
+        try {
+            body = objectMapper.writeValueAsString(fallbackResponse);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        return response.writeWith(
+                Mono.just(response.bufferFactory().wrap(body.getBytes())));
+    }
 
     Mono<Void> unauthenticated(ServerHttpResponse response) {
         ApiResponse<?> apiResponse = ApiResponse.builder()
                 .code(401)
                 .message("Unauthenticated")
                 .build();
-
         String body = null;
         try {
             body = objectMapper.writeValueAsString(apiResponse);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
-
         return response.writeWith(
                 Mono.just(response.bufferFactory().wrap(body.getBytes())));
     }

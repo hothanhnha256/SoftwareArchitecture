@@ -1,4 +1,4 @@
-package com.devteria.api_gateway.dto;
+package com.devteria.api_gateway.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
@@ -13,7 +13,6 @@ import lombok.experimental.FieldDefaults;
 public class ApiResponse<T> {
     @Builder.Default
     private int code = 1000;
-
     private String message;
     private T result;
 }

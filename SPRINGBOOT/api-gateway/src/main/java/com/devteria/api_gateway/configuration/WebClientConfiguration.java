@@ -1,9 +1,11 @@
 package com.devteria.api_gateway.configuration;
 
 import com.devteria.api_gateway.repository.IdentityClient;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
@@ -21,9 +23,18 @@ public class WebClientConfiguration {
     String identityBaseUrl;
 
     @Bean
+    @Primary
     WebClient webClient(){
         return WebClient.builder()
                 .baseUrl(identityBaseUrl)
+                .build();
+    }
+
+    @Bean
+    @Qualifier("fallbackWebClient")
+    public WebClient fallbackWebClient() {
+        return WebClient.builder()
+                .baseUrl("http://localhost:8888") // assuming fallback is local
                 .build();
     }
 
