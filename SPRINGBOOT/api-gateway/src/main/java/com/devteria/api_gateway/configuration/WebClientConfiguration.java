@@ -1,6 +1,8 @@
 package com.devteria.api_gateway.configuration;
 
 import com.devteria.api_gateway.repository.IdentityClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +21,7 @@ import java.util.List;
 @Configuration
 public class WebClientConfiguration {
 
+    private static final Logger log = LoggerFactory.getLogger(WebClientConfiguration.class);
     @Value("${identity.base-url}")
     String identityBaseUrl;
 
@@ -40,15 +43,16 @@ public class WebClientConfiguration {
 
     @Bean
     CorsWebFilter corsWebFilter(){
+        log.info("corsWebFilter");
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of("*"));
+//        corsConfiguration.setAllowedOrigins(List.of("*"));
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173", "https://0ee4-115-79-30-18.ngrok-free.app"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
         corsConfiguration.setAllowedMethods(List.of("*"));
+        corsConfiguration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
-
-        corsConfiguration.setAllowCredentials(true);
 
         return new CorsWebFilter(urlBasedCorsConfigurationSource);
     }

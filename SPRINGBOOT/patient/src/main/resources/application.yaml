@@ -20,8 +20,10 @@ app:
     patient: http://localhost:8900/patient
 
 appointment-service:
-    url: http://localhost:8901/appointment
+  url: http://localhost:8901/appointment
 
+inventory-service:
+  url: http://localhost:8903/inventory
 #  security:
 #    user:
 #      name: admin

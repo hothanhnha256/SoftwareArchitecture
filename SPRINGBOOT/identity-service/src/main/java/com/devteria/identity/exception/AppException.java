@@ -7,6 +7,12 @@ public class AppException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
+    // To override error code message
+    public AppException(ErrorCode errorCode, String message) {
+        super(message);
+        this.errorCode = errorCode;
+    }
+
     private ErrorCode errorCode;
 
     public ErrorCode getErrorCode() {

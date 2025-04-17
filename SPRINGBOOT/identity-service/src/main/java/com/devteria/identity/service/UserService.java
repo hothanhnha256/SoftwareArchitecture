@@ -4,10 +4,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-import com.devteria.identity.dto.request.CreatePatientAccount;
-import com.devteria.identity.dto.request.CreatePatientDTO;
+import com.devteria.identity.dto.request.*;
 import com.devteria.identity.feignclient.PatientServiceClient;
+import com.devteria.identity.feignclient.StaffServiceClient;
 import com.devteria.identity.mapper.PatientMapper;
+import com.devteria.identity.mapper.StaffMapper;
 import feign.FeignException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,8 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.devteria.identity.constant.Roles;
-import com.devteria.identity.dto.request.UserCreationRequest;
-import com.devteria.identity.dto.request.UserUpdateRequest;
 import com.devteria.identity.dto.response.UserResponse;
 import com.devteria.identity.entity.User;
 import com.devteria.identity.exception.AppException;
@@ -39,9 +38,11 @@ public class UserService {
 
     private UserRepository userRepository;
     private final UserMapper userMapper;
+    private final StaffMapper staffMapper;
     private final PatientMapper patientMapper;
     private PasswordEncoder passwordEncoder;
     private PatientServiceClient patientServiceClient;
+    private StaffServiceClient staffServiceClient;
 
     public UserResponse createUser(UserCreationRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) throw new AppException(ErrorCode.USER_EXISTED);
@@ -59,6 +60,34 @@ public class UserService {
         log.info("User created: {}", user);
 
         return userMapper.toUserResponse(user);
+    }
+
+    @Transactional
+    public UserResponse createStaff(CreateStaffAccountDTO request) {
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
+        System.out.println(request.getDepartmentId());
+
+        UserCreationRequest userCreationRequest = staffMapper.toUserCreationRequest(request);
+        User user = userMapper.toUser(userCreationRequest);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setCreatedAt(LocalDate.now());
+        user.setUpdatedAt(LocalDate.now());
+        user.setRole(request.getRole());
+
+        try {
+            user = userRepository.save(user);
+            CreateStaffDTO createStaffDTO = staffMapper.toCreateStaffDTO(request);
+            System.out.println(createStaffDTO.getDepartmentId());
+            createStaffDTO.setId(user.getId());
+            staffServiceClient.createStaffProfile(createStaffDTO);
+        } catch (Exception ex) {
+            log.error("Unexpected error: {}", ex.getMessage());
+            throw new AppException(ErrorCode.FAILED_TO_CREATE_STAFF, ex.getMessage());
+        }
+        UserResponse userResponse = userMapper.toUserResponse(user);
+        return userResponse;
     }
 
     @Transactional
@@ -103,7 +132,6 @@ public class UserService {
     }
 
 
-
     public UserResponse getMyInfo() {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
@@ -118,7 +146,6 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         user.setUpdatedAt(LocalDate.now());
-
 
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));

@@ -48,6 +48,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             put("/appointment/test-patient-feign", Set.of("GET")); // Only GET is allowed
             put("/appointment/departments", Set.of("GET")); // Only GET is allowed
             put("/identity/users/create-patient", Set.of("POST")); // Only GET is allowed
+            put("/identity/users/staff-account", Set.of("POST")); //TODO: temp
         }
     };
 
@@ -60,7 +61,10 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         log.info("Enter authentication filter....");
         // return default chain if the request is a public endpoint
         if (isPublicEndpoint(exchange.getRequest()))
+        {
+            log.info("public endpoint");
             return chain.filter(exchange);
+        }
 
         // Get token from authorization header
         List<String> authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION);

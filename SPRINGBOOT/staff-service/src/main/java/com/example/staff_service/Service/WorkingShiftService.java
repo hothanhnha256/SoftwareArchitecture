@@ -38,6 +38,7 @@ public class WorkingShiftService {
         workingShift.setListStaff(staffIds);
         return workingShiftRepository.save(workingShift);
     }
+
     public List<WorkingShiftResponse> getWorkingShifts(String dateA, String dateB, String listStaff) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date startDate = null;
@@ -51,7 +52,7 @@ public class WorkingShiftService {
 
         List<WorkingShift> workingShifts;
         if (startDate != null && endDate != null && listStaff != null) {
-            workingShifts =  workingShiftRepository.findByDateBetweenAndListStaffContaining(startDate, endDate, listStaff);
+            workingShifts = workingShiftRepository.findByDateBetweenAndListStaffContaining(startDate, endDate, listStaff);
         } else if (startDate != null && endDate != null) {
             workingShifts = workingShiftRepository.findByDateBetween(startDate, endDate);
         } else if (listStaff != null) {
@@ -63,10 +64,12 @@ public class WorkingShiftService {
                 .map(shift -> new WorkingShiftResponse(shift.getDate(), shift.getHours()))
                 .collect(Collectors.toList());
     }
+
     public WorkingShift getWorkingShiftById(String workingShiftId) {
         return workingShiftRepository.findById(workingShiftId)
                 .orElseThrow(() -> new RuntimeException("WorkingShift not found with id: " + workingShiftId));
     }
+
     public WorkingShift addStaffToWorkingShift(String workingShiftId, String staffId) {
         Optional<WorkingShift> optionalWorkingShift = workingShiftRepository.findById(workingShiftId);
 
@@ -78,6 +81,7 @@ public class WorkingShiftService {
             throw new RuntimeException("WorkingShift not found with id: " + workingShiftId);
         }
     }
+
     public List<StaffResponse> getStaffsInWorkingShift(Date date, int hours, String departmentId) {
         Date[] range = DateUtils.getStartAndEndOfDay(date);
         Date start = range[0];
@@ -115,6 +119,7 @@ public class WorkingShiftService {
             throw new RuntimeException("WorkingShift not found with Date : " + date + " and Hours : " + hours);
         }
     }
+
     public WorkingShift getShiftIdByDateAndHours(Date date, int hours) {
         Date[] range = DateUtils.getStartAndEndOfDay(date);
         Date start = range[0];

@@ -34,6 +34,7 @@ public class StaffService {
 
 
     public Staff createStaff(Staff staff) {
+        System.out.println(staff.getDepartmentId());
         this.getStaffById(staff.getId()).ifPresent(existingStaff -> {
             throw new AppException(ErrorCode.CONFLICT, "Staff with ID " + staff.getId() + " already exists.");
         });

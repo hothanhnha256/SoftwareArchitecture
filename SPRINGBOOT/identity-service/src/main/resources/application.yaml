@@ -21,3 +21,5 @@ jwt:
 feignclient:
   patient-service:
     url: "http://localhost:8900/patient"
+  staff-service:
+    url: "http://localhost:8800/staff"

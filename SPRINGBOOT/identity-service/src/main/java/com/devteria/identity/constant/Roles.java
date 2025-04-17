@@ -4,5 +4,8 @@ public enum Roles {
     ADMIN,
     USER,
     MANAGER,
-    DOCTOR
+    DOCTOR,
+    NURSE,
+    RECEPTIONIST,
+    PHARMACIST,
 }

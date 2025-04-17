@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -19,5 +21,9 @@ public class MedicalOrderItemService {
     public Page<MedicalOrderItem> getAllMedicalOrderItems(MedicalOrderItemRequestDTO dto, Pageable pageable) {
         Specification<MedicalOrderItem> spec = MedicalOrderItemSpecification.findWithFilters(dto.getCode(), dto.getName());
         return medicalOrderItemRepository.findAll(spec, pageable);
+    }
+
+    public List<MedicalOrderItem> getAllMedicalOrderItemsByIds(List<String> ids) {
+        return medicalOrderItemRepository.findAllById(ids);
     }
 }

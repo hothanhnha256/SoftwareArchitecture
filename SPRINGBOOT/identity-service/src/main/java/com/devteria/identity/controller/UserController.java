@@ -2,14 +2,11 @@ package com.devteria.identity.controller;
 
 import java.util.List;
 
-import com.devteria.identity.dto.request.CreatePatientAccount;
-import com.devteria.identity.dto.request.CreatePatientDTO;
+import com.devteria.identity.dto.request.*;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.devteria.identity.dto.request.UserCreationRequest;
-import com.devteria.identity.dto.request.UserUpdateRequest;
 import com.devteria.identity.dto.response.ApiResponse;
 import com.devteria.identity.dto.response.UserResponse;
 import com.devteria.identity.service.UserService;
@@ -38,6 +35,14 @@ public class UserController {
     ApiResponse<UserResponse> createPatient(@RequestBody @Valid CreatePatientAccount request) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.createPatient(request))
+                .build();
+    }
+
+    @PostMapping("/staff-account")
+    ApiResponse<UserResponse> createStaffAccount(@RequestBody @Valid CreateStaffAccountDTO request) {
+        //TODO: secure this endpoint, only allow admin
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.createStaff(request))
                 .build();
     }
 

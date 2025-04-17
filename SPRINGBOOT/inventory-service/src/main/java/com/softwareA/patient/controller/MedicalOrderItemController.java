@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,6 +32,15 @@ public class MedicalOrderItemController {
                 .page(page.getNumber())
                 .result(page.getContent())
                 .total(page.getTotalPages())
+                .build());
+    }
+
+    // FOR OTHER SERVICE
+    @PostMapping("/by-ids")
+    public ResponseEntity<ApiResponse<List<MedicalOrderItem>>> getAllByIds(List<String> ids) {
+        List<MedicalOrderItem> list = this.medicalOrderItemService.getAllMedicalOrderItemsByIds(ids);
+        return ResponseEntity.ok().body(ApiResponse.<List<MedicalOrderItem>>builder()
+                .result(list)
                 .build());
     }
 }

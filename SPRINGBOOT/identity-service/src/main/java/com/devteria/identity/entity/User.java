@@ -23,11 +23,11 @@ public class User {
 
     @Column(unique = true, nullable = false)
     String username;
-
+    @Column(nullable = false)
     String password;
 
     LocalDate createdAt;
     LocalDate updatedAt;
-
+    @Enumerated(EnumType.STRING)
     Roles role;
 }
