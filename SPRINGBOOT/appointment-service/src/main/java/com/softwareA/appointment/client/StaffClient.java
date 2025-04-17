@@ -20,7 +20,7 @@ public interface StaffClient {
     ApiResponse<Doctor> getDoctorById(@RequestParam("id") String id);
     @GetMapping("/working-shifts/{id}")
     ApiResponse<Shift> getShiftById(@PathVariable("id") String id);
-    @GetMapping("/working-shifts/get-shift-id")
+    @GetMapping("/working-shifts/shift-id")
     ApiResponse<Shift> getShiftByDateTime(@RequestParam("date") String date,
                                           @RequestParam("hours") Integer hour);
 

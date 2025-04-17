@@ -6,6 +6,7 @@ import com.example.staff_service.DTO.Response.WorkingShiftResponse;
 import com.example.staff_service.Entity.Department;
 import com.example.staff_service.Entity.Staff;
 import com.example.staff_service.Entity.WorkingShift;
+import com.example.staff_service.Exception.ResourceNotFoundException;
 import com.example.staff_service.Repository.DepartmentRepository;
 import com.example.staff_service.Repository.StaffRepository;
 import com.example.staff_service.Repository.WorkingShiftRepository;
@@ -18,6 +19,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Criteria;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class WorkingShiftService {
     WorkingShiftRepository workingShiftRepository;
+    StaffRepository staffRepository;
     MongoTemplate mongoTemplate;
 
 
@@ -38,25 +41,30 @@ public class WorkingShiftService {
         workingShift.setListStaff(staffIds);
         return workingShiftRepository.save(workingShift);
     }
-
-    public List<WorkingShiftResponse> getWorkingShifts(String dateA, String dateB, String listStaff) {
+    public List<WorkingShiftResponse> getWorkingShifts(String dateA, String dateB, String staffId) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date startDate = null;
         Date endDate = null;
+        if(staffId != null && staffRepository.findById(staffId).isEmpty()){
+            throw new ResourceNotFoundException("Staff ID not found");
+        }
         try {
-            startDate = sdf.parse(dateA);
-            endDate = sdf.parse(dateB);
-        } catch (Exception e) {
-            e.printStackTrace();
+            if (dateA != null && dateB != null) {
+                startDate = sdf.parse(dateA);
+                endDate = sdf.parse(dateB);
+            }
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("Invalid date format. Expected yyyy-MM-dd", e);
         }
 
         List<WorkingShift> workingShifts;
-        if (startDate != null && endDate != null && listStaff != null) {
-            workingShifts = workingShiftRepository.findByDateBetweenAndListStaffContaining(startDate, endDate, listStaff);
+
+        if (startDate != null && endDate != null && staffId != null) {
+            workingShifts = workingShiftRepository.findByDateBetweenAndListStaffContaining(startDate, endDate, staffId);
         } else if (startDate != null && endDate != null) {
             workingShifts = workingShiftRepository.findByDateBetween(startDate, endDate);
-        } else if (listStaff != null) {
-            workingShifts = workingShiftRepository.findByListStaffContaining(listStaff);
+        } else if (staffId != null) {
+            workingShifts = workingShiftRepository.findByListStaffContaining(staffId);
         } else {
             workingShifts = workingShiftRepository.findAll();
         }
@@ -64,60 +72,47 @@ public class WorkingShiftService {
                 .map(shift -> new WorkingShiftResponse(shift.getDate(), shift.getHours()))
                 .collect(Collectors.toList());
     }
-
     public WorkingShift getWorkingShiftById(String workingShiftId) {
         return workingShiftRepository.findById(workingShiftId)
-                .orElseThrow(() -> new RuntimeException("WorkingShift not found with id: " + workingShiftId));
+                .orElseThrow(() -> new ResourceNotFoundException("WorkingShift not found with id: " + workingShiftId));
     }
-
     public WorkingShift addStaffToWorkingShift(String workingShiftId, String staffId) {
-        Optional<WorkingShift> optionalWorkingShift = workingShiftRepository.findById(workingShiftId);
-
-        if (optionalWorkingShift.isPresent()) {
-            WorkingShift workingShift = optionalWorkingShift.get();
-            if (!workingShift.getListStaff().contains(staffId)) workingShift.getListStaff().add(staffId);
-            return workingShiftRepository.save(workingShift);
-        } else {
-            throw new RuntimeException("WorkingShift not found with id: " + workingShiftId);
+        WorkingShift workingShift = workingShiftRepository.findById(workingShiftId)
+                .orElseThrow(() -> new ResourceNotFoundException("WorkingShift not found with id: " + workingShiftId));
+        if (!staffRepository.existsById(staffId)) {
+            throw new ResourceNotFoundException("Staff not found with id: " + staffId);
         }
+        if (!workingShift.getListStaff().contains(staffId)) {
+            workingShift.getListStaff().add(staffId);
+        }
+        return workingShiftRepository.save(workingShift);
     }
-
     public List<StaffResponse> getStaffsInWorkingShift(Date date, int hours, String departmentId) {
         Date[] range = DateUtils.getStartAndEndOfDay(date);
         Date start = range[0];
         Date end = range[1];
-        Optional<WorkingShift> optionalWorkingShift = workingShiftRepository.findOneByDateRangeAndHours(start, end, hours);
 
-        if (optionalWorkingShift.isPresent()) {
-            WorkingShift workingShift = optionalWorkingShift.get();
+        WorkingShift workingShift = workingShiftRepository
+                .findOneByDateRangeAndHours(start, end, hours)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "WorkingShift not found for date: " + date + " and hours: " + hours));
 
-            // Lấy danh sách staffIds từ workingShift
-            List<String> staffIds = workingShift.getListStaff();
-            System.out.println("Staff IDs: " + staffIds);
+        // Lấy danh sách staffIds từ workingShift
+        List<String> staffIds = workingShift.getListStaff();
 
-            Query query = new Query();
-            query.addCriteria(Criteria.where("id").in(staffIds)); // field "id" phải đúng với MongoDB
-            List<Staff> staffList = mongoTemplate.find(query, Staff.class);
-            System.out.println("Staff List: " + staffList);
+        Query query = new Query();
+        query.addCriteria(Criteria.where("id").in(staffIds));
 
-            List<StaffResponse> staffResponses = new ArrayList<>();
-            for (Staff staff : staffList) {
-                if (departmentId != null && !departmentId.equals(staff.getDepartmentId())) {
-                    continue;
-                }
-                StaffResponse staffResponse = new StaffResponse(
+        List<Staff> staffList = mongoTemplate.find(query, Staff.class);
+
+        return staffList.stream()
+                .filter(staff -> departmentId == null || departmentId.equals(staff.getDepartmentId()))
+                .map(staff -> new StaffResponse(
                         staff.getName(),
                         staff.getRole(),
                         staff.getPhoneNumber(),
-                        staff.getAddress()
-                );
-                staffResponses.add(staffResponse);
-            }
-
-            return staffResponses;
-        } else {
-            throw new RuntimeException("WorkingShift not found with Date : " + date + " and Hours : " + hours);
-        }
+                        staff.getAddress()))
+                .collect(Collectors.toList());
     }
 
     public WorkingShift getShiftIdByDateAndHours(Date date, int hours) {
