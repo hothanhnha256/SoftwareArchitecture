@@ -15,11 +15,15 @@ import java.util.List;
 @FeignClient(name = "staff-service", url = "${staff-service.url}")
 public interface StaffClient {
     @GetMapping("/department/{departmentId}")
-    ApiResponse<List<Doctor>> getAvailableDoctors(@PathVariable("departmentId") String departmentId);
+    ApiResponse<List<Doctor>> getAvailableDoctors(@PathVariable("departmentId") String departmentId,
+                                                  @RequestParam(required = false) String role);
+
     @GetMapping("/{id}")
     ApiResponse<Doctor> getDoctorById(@RequestParam("id") String id);
+
     @GetMapping("/working-shifts/{id}")
     ApiResponse<Shift> getShiftById(@PathVariable("id") String id);
+
     @GetMapping("/working-shifts/shift-id")
     ApiResponse<Shift> getShiftByDateTime(@RequestParam("date") String date,
                                           @RequestParam("hours") Integer hour);

@@ -1,10 +1,16 @@
 package com.softwareA.patient.service;
 
 import com.softwareA.patient.client.InventoryClient;
+import com.softwareA.patient.client.StaffClient;
+import com.softwareA.patient.dto.Staff;
 import com.softwareA.patient.dto.request.CreateMedicalOrderDTO;
 import com.softwareA.patient.dto.request.MedicalOrderItemDTO;
+import com.softwareA.patient.dto.response.MedicalOrderResponse;
+import com.softwareA.patient.dto.response.PatientGeneralDTO;
 import com.softwareA.patient.exception.AppException;
 import com.softwareA.patient.exception.ErrorCode;
+import com.softwareA.patient.mapper.MedicalOrderMapper;
+import com.softwareA.patient.mapper.PatientMapper;
 import com.softwareA.patient.model.MedicalOrder;
 import com.softwareA.patient.model.MedicalOrderItem;
 import com.softwareA.patient.model.MedicalOrder_OrderItem;
@@ -14,6 +20,7 @@ import com.softwareA.patient.repository.MedicalOrder_OrderItemRepository;
 import com.softwareA.patient.repository.PatientRepository;
 import com.softwareA.patient.service.validator.MedicalOrderItemValidator;
 import com.softwareA.patient.service.validator.PatientValidator;
+import feign.FeignException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +38,11 @@ public class MedicalOrderService {
     private final MedicalOrderRepository medicalOrderRepository;
     private final MedicalOrder_OrderItemRepository medicalOrder_orderItemRepository;
     private final InventoryClient inventoryClient;
-    private final PatientValidator patientValidator;
+    private final PatientRepository patientRepository;
     private final MedicalOrderItemValidator medicalOrderItemValidator;
+    private final MedicalOrderMapper medicalOrderMapper;
+    private final StaffClient staffClient;
+    private final PatientMapper patientMapper;
 
     @Transactional
     public MedicalOrder createMedicalOrder(CreateMedicalOrderDTO dto, AuthInfo authInfo) {
@@ -41,9 +51,9 @@ public class MedicalOrderService {
             throw new AppException(ErrorCode.FORBIDDEN, "You are not authorized to create a medical order");
         }
         // CHECK IF PATIENT EXISTS
-//        if (patientValidator.patientExists(dto.getPatientId())) {
-//            throw new AppException(ErrorCode.PATIENT_NOT_FOUND, "Patient not found");
-//        }
+        if (patientValidator.patientExists(dto.getPatientId())) {
+            throw new AppException(ErrorCode.PATIENT_NOT_FOUND, "Patient not found");
+        }
         List<MedicalOrder_OrderItem> items = new ArrayList<>();
         String medicalOrderId = UUID.randomUUID().toString();
         MedicalOrder medicalOrder = new MedicalOrder();
@@ -56,7 +66,6 @@ public class MedicalOrderService {
         } catch (AppException e) {
             throw e;
         } catch (Exception e) {
-            log.error("here");
             throw new AppException(ErrorCode.RESOURCE_NOT_FOUND, "Medical order item not found");
         }
 
@@ -71,7 +80,7 @@ public class MedicalOrderService {
         return medicalOrderRepository.save(medicalOrder);
     }
 
-    public MedicalOrder getMedicalOrderById(String id, AuthInfo authInfo) {
+    public MedicalOrderResponse getMedicalOrderById(String id, AuthInfo authInfo) {
         // FOR DOCTOR, PATIENT
         if (!authInfo.getUserRole().equals("DOCTOR") && !authInfo.getUserRole().equals("USER")) {
             throw new AppException(ErrorCode.FORBIDDEN, "You are not authorized to view this medical order");
@@ -83,24 +92,40 @@ public class MedicalOrderService {
         MedicalOrder order = medicalOrderOptional.get();
         // GET MEDICAL ORDER ITEMS MAPPING OF THIS ORDER
         List<MedicalOrder_OrderItem> order_orderItems = medicalOrder_orderItemRepository.findByMedicalOrderId(id);
+        // GET MEDICAL ORDER ITEMS INFO FROM INVENTORY SERVICE
+        integrateMedicalItemInfo(order_orderItems);
+        MedicalOrderResponse response = medicalOrderMapper.toMedicalOrderResponse(order);
+        response.setMedicalOrderItems(order_orderItems); // add the order items to the response
+        // get patient info
+        patientRepository.findById(order.getPatientId()).ifPresent(patient -> {
+            PatientGeneralDTO patientDto = patientMapper.toGeneralDTO(patient);  // Map the patient to DTO
+            response.setPatient(patientDto);  // Set the DTO to the response
+        });
+        // add doctor info
         try {
-            // GET MEDICAL ORDER ITEMS INFO FROM INVENTORY SERVICE
-            List<MedicalOrderItem> orderItems = inventoryClient.getAllMedicalOrderItemsByIds(
-                            order_orderItems
-                                    .stream()
-                                    .map(MedicalOrder_OrderItem::getMedicalOrderItemId)
-                                    .collect(Collectors.toList()))
-                    .getResult();
-            Map<String, MedicalOrderItem> itemMap = orderItems.stream()
+            Staff doctor = staffClient.getDoctorById(order.getDoctorId()).getResult();
+            response.setDoctor(doctor);
+        } catch (FeignException ex) {
+            log.error("Error while fetching doctor info: {}", ex.getMessage(), ex);
+        }
+        return response;
+    }
+
+    private void integrateMedicalItemInfo(List<MedicalOrder_OrderItem> orderItems) {
+        List<String> medicalOrderItemIds = orderItems.stream()
+                .map(MedicalOrder_OrderItem::getMedicalOrderItemId)
+                .collect(Collectors.toList());
+        try {
+            List<MedicalOrderItem> medicalOrderItems = inventoryClient.getAllMedicalOrderItemsByIds(medicalOrderItemIds).getResult();
+            Map<String, MedicalOrderItem> itemMap = medicalOrderItems.stream()
                     .collect(Collectors.toMap(MedicalOrderItem::getCode, item -> item));
-            // assign medicalOrderItem to orderItem
-            for (MedicalOrder_OrderItem orderItem : order_orderItems) {
+            for (MedicalOrder_OrderItem orderItem : orderItems) {
                 MedicalOrderItem matchingItem = itemMap.get(orderItem.getMedicalOrderItemId());
                 orderItem.setMedicalOrderItem(matchingItem);
             }
-        } catch (Exception e) {
-            log.info(e.getMessage());
+        } catch (FeignException feignException) {
+            log.error("Error while fetching doctor info: {}", feignException.getMessage(), feignException);
         }
-        return order;
+
     }
 }

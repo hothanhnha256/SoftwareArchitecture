@@ -170,7 +170,7 @@ public class AppointmentService {
         ApiResponse<List<Doctor>> doctorResponse = null;
         String shiftId;
         try {
-            doctorResponse = this.staffClient.getAvailableDoctors(dto.getDepartmentId());
+            doctorResponse = this.staffClient.getAvailableDoctors(dto.getDepartmentId(), "DOCTOR");
         } catch (Exception e) {
             log.info("No doctor in this department");
             return new ArrayList<>();

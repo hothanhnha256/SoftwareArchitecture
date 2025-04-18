@@ -2,6 +2,7 @@ package com.softwareA.patient.controller;
 
 import com.softwareA.patient.dto.request.CreateMedicalOrderDTO;
 import com.softwareA.patient.dto.response.ApiResponse;
+import com.softwareA.patient.dto.response.MedicalOrderResponse;
 import com.softwareA.patient.model.MedicalOrder;
 import com.softwareA.patient.model.auth.AuthInfo;
 import com.softwareA.patient.service.MedicalOrderService;
@@ -35,10 +36,16 @@ public class MedicalOrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<MedicalOrder>> getMedicalOrderById(AuthInfo authInfo,
+    public ResponseEntity<ApiResponse<MedicalOrderResponse>> getMedicalOrderById(@RequestHeader("UserRole") String userRole,
+                                                                         @RequestHeader("UserId") String userId,
                                                                          @PathVariable String id) {
-        MedicalOrder medicalOrder = this.medicalOrderService.getMedicalOrderById(id, authInfo);
-        return ResponseEntity.ok().body(ApiResponse.<MedicalOrder>builder()
+        log.info("Get medical order with id: {}\nUserRole: {}\nUserId: {}", id, userRole, userId);
+        AuthInfo authInfo = AuthInfo.builder()
+                .userId(userId)
+                .userRole(userRole)
+                .build();
+        MedicalOrderResponse medicalOrder = this.medicalOrderService.getMedicalOrderById(id, authInfo);
+        return ResponseEntity.ok().body(ApiResponse.<MedicalOrderResponse>builder()
                 .result(medicalOrder)
                 .build());
     }

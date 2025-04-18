@@ -24,5 +24,5 @@ public class MedicalOrder {
     @CreationTimestamp
     LocalDateTime createdAt;
     @Transient
-    List<MedicalOrderItem> medicalOrderItems;
+    List<MedicalOrder_OrderItem> medicalOrderItems;
 }

@@ -24,6 +24,9 @@ appointment-service:
 
 inventory-service:
   url: http://localhost:8903/inventory
+
+staff-service:
+  url: http://localhost:8800/staff
 #  security:
 #    user:
 #      name: admin
