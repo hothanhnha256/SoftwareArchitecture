@@ -12,4 +12,5 @@ import java.util.List;
 public interface InventoryClient {
     @PostMapping("/medical-order-items/by-ids")
     ApiResponse<List<MedicalOrderItem>> getAllMedicalOrderItemsByIds(List<String> ids);
+
 }

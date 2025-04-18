@@ -21,6 +21,7 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -98,8 +99,15 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
                 return unauthenticated(exchange.getResponse());
             }
         }).onErrorResume(throwable -> {
-            log.error("Error during authentication: here");
-            return serviceUnavailable(exchange.getResponse());
+//            log.error("Error during authentication: here");
+//            return serviceUnavailable(exchange.getResponse());
+            if (throwable instanceof WebClientRequestException) {
+                log.error("Identity service is offline or unreachable", throwable);
+                return serviceUnavailable(exchange.getResponse());
+            } else {
+                log.error("Unexpected error during authentication", throwable);
+                return unauthenticated(exchange.getResponse());
+            }
         });
     }
 

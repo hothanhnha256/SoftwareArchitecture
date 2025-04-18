@@ -8,7 +8,9 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
     INVALID_UUID(2000, "Invalid UUID", HttpStatus.BAD_REQUEST),
-    RESOURCE_NOT_FOUND(4004, "Not found", HttpStatus.NOT_FOUND),
+    MEDICAL_ORDER_ITEM_NOT_FOUND(4004, "Medical order item not found", HttpStatus.NOT_FOUND),
+    RESOURCE_NOT_FOUND(4005, "Resource not found", HttpStatus.NOT_FOUND),
+    PATIENT_NOT_FOUND(3000, "Patient not found", HttpStatus.NOT_FOUND),
 
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized error", HttpStatus.INTERNAL_SERVER_ERROR),
 

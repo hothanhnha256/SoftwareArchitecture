@@ -44,7 +44,7 @@ public class MedicalOrderItemController {
 
     // FOR OTHER SERVICE
     @PostMapping("/by-ids")
-    public ResponseEntity<ApiResponse<List<MedicalOrderItem>>> getAllByIds(List<String> ids) {
+    public ResponseEntity<ApiResponse<List<MedicalOrderItem>>> getAllByIds(@RequestBody List<String> ids) {
         List<MedicalOrderItem> list = this.medicalOrderItemService.getAllMedicalOrderItemsByIds(ids);
         return ResponseEntity.ok().body(ApiResponse.<List<MedicalOrderItem>>builder()
                 .result(list)
