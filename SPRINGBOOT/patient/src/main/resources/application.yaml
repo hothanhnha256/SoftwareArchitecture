@@ -12,9 +12,18 @@ spring:
   jpa:
 
     hibernate:
+
       ddl-auto: update
+      format_sql: true
     show-sql: true
 
+logging:
+    level:
+      org:
+        hibernate:
+          SQL: debug
+          orm.jdbc.bind: trace
+          stat: debug
 app:
   services:
     patient: http://localhost:8900/patient
