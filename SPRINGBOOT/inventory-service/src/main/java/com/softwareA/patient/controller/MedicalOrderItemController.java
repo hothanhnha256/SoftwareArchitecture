@@ -4,15 +4,13 @@ import com.softwareA.patient.dto.request.MedicalOrderItemRequestDTO;
 import com.softwareA.patient.dto.response.ApiResponse;
 import com.softwareA.patient.model.MedicalOrderItem;
 import com.softwareA.patient.service.MedicalOrderItemService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,6 +30,15 @@ public class MedicalOrderItemController {
                 .page(page.getNumber())
                 .result(page.getContent())
                 .total(page.getTotalPages())
+                .build());
+    }
+
+    @PostMapping("")
+    public ResponseEntity<ApiResponse<MedicalOrderItem>> create(@Valid @RequestBody MedicalOrderItem dto) {
+        //TODO authorization
+        MedicalOrderItem medicalOrderItem = this.medicalOrderItemService.createMedicalOrderItem(dto);
+        return ResponseEntity.ok().body(ApiResponse.<MedicalOrderItem>builder()
+                .result(medicalOrderItem)
                 .build());
     }
 

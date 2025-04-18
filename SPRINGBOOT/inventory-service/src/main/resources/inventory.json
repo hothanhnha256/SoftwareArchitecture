@@ -1,0 +1,602 @@
+[
+  {
+    "code": "MO000",
+    "name": "Chụp CT đầu",
+    "description": "Chụp CT não để phát hiện các tổn thương",
+    "price": 1200000
+  },
+  {
+    "code": "MO001",
+    "name": "Chụp X-quang phổi",
+    "description": "Kiểm tra các bệnh liên quan đến phổi",
+    "price": 200000
+  },
+  {
+    "code": "MO002",
+    "name": "Phẫu thuật ruột thừa",
+    "description": "Cắt bỏ ruột thừa viêm",
+    "price": 5000000
+  },
+  {
+    "code": "MO003",
+    "name": "Khám chuyên khoa nội",
+    "description": "Khám và tư vấn bệnh lý nội khoa",
+    "price": 300000
+  },
+  {
+    "code": "MO004",
+    "name": "Xét nghiệm nước tiểu",
+    "description": "Phân tích nước tiểu để kiểm tra sức khỏe",
+    "price": 100000
+  },
+  {
+    "code": "MO005",
+    "name": "Phẫu thuật sỏi thận",
+    "description": "Lấy sỏi ra khỏi thận bằng nội soi",
+    "price": 8000000
+  },
+  {
+    "code": "MO006",
+    "name": "Xét nghiệm máu",
+    "description": "Xét nghiệm tổng quát các thành phần máu",
+    "price": 150000
+  },
+  {
+    "code": "MO007",
+    "name": "Xét nghiệm nước tiểu 2",
+    "description": "Phân tích nước tiểu để kiểm tra sức khỏe",
+    "price": 100000
+  },
+  {
+    "code": "MO008",
+    "name": "Tiêm phòng cúm",
+    "description": "Tiêm vắc-xin phòng bệnh cúm",
+    "price": 180000
+  },
+  {
+    "code": "MO009",
+    "name": "Phẫu thuật sỏi thận 2",
+    "description": "Lấy sỏi ra khỏi thận bằng nội soi",
+    "price": 8000000
+  },
+  {
+    "code": "MO010",
+    "name": "Xét nghiệm máu 2",
+    "description": "Xét nghiệm tổng quát các thành phần máu",
+    "price": 150000
+  },
+  {
+    "code": "MO011",
+    "name": "Khám chuyên khoa nội 2",
+    "description": "Khám và tư vấn bệnh lý nội khoa",
+    "price": 300000
+  },
+  {
+    "code": "MO012",
+    "name": "Chụp X-quang phổi 2",
+    "description": "Kiểm tra các bệnh liên quan đến phổi",
+    "price": 200000
+  },
+  {
+    "code": "MO013",
+    "name": "Xét nghiệm máu 3",
+    "description": "Xét nghiệm tổng quát các thành phần máu",
+    "price": 150000
+  },
+  {
+    "code": "MO014",
+    "name": "Phẫu thuật ruột thừa 2",
+    "description": "Cắt bỏ ruột thừa viêm",
+    "price": 5000000
+  },
+  {
+    "code": "MO015",
+    "name": "Xét nghiệm máu 4",
+    "description": "Xét nghiệm tổng quát các thành phần máu",
+    "price": 150000
+  },
+  {
+    "code": "MO016",
+    "name": "Chụp CT đầu 2",
+    "description": "Chụp CT não để phát hiện các tổn thương",
+    "price": 1200000
+  },
+  {
+    "code": "MO017",
+    "name": "Chụp X-quang phổi 3",
+    "description": "Kiểm tra các bệnh liên quan đến phổi",
+    "price": 200000
+  },
+  {
+    "code": "MO018",
+    "name": "Tiêm phòng cúm 2",
+    "description": "Tiêm vắc-xin phòng bệnh cúm",
+    "price": 180000
+  },
+  {
+    "code": "MO019",
+    "name": "Khám chuyên khoa nội 3",
+    "description": "Khám và tư vấn bệnh lý nội khoa",
+    "price": 300000
+  },
+  {
+    "code": "MO020",
+    "name": "Phẫu thuật ruột thừa 3",
+    "description": "Cắt bỏ ruột thừa viêm",
+    "price": 5000000
+  },
+  {
+    "code": "MO021",
+    "name": "Phẫu thuật sỏi thận 3",
+    "description": "Lấy sỏi ra khỏi thận bằng nội soi",
+    "price": 8000000
+  },
+  {
+    "code": "MO022",
+    "name": "Tiêm phòng cúm 3",
+    "description": "Tiêm vắc-xin phòng bệnh cúm",
+    "price": 180000
+  },
+  {
+    "code": "MO023",
+    "name": "Khám chuyên khoa nội 4",
+    "description": "Khám và tư vấn bệnh lý nội khoa",
+    "price": 300000
+  },
+  {
+    "code": "MO024",
+    "name": "Phẫu thuật ruột thừa 4",
+    "description": "Cắt bỏ ruột thừa viêm",
+    "price": 5000000
+  },
+  {
+    "code": "MO025",
+    "name": "Chụp CT đầu 3",
+    "description": "Chụp CT não để phát hiện các tổn thương",
+    "price": 1200000
+  },
+  {
+    "code": "MO026",
+    "name": "Xét nghiệm máu 5",
+    "description": "Xét nghiệm tổng quát các thành phần máu",
+    "price": 150000
+  },
+  {
+    "code": "MO027",
+    "name": "Xét nghiệm nước tiểu 3",
+    "description": "Phân tích nước tiểu để kiểm tra sức khỏe",
+    "price": 100000
+  },
+  {
+    "code": "MO028",
+    "name": "Tiêm phòng cúm 4",
+    "description": "Tiêm vắc-xin phòng bệnh cúm",
+    "price": 180000
+  },
+  {
+    "code": "MO029",
+    "name": "Phẫu thuật ruột thừa 5",
+    "description": "Cắt bỏ ruột thừa viêm",
+    "price": 5000000
+  },
+  {
+    "code": "MO030",
+    "name": "Tiêm ngừa viêm gan B",
+    "description": "Tiêm vắc-xin phòng viêm gan B",
+    "price": 220000
+  },
+  {
+    "code": "MO031",
+    "name": "Chụp CT đầu 4",
+    "description": "Chụp CT não để phát hiện các tổn thương",
+    "price": 1200000
+  },
+  {
+    "code": "MO032",
+    "name": "Phẫu thuật ruột thừa 6",
+    "description": "Cắt bỏ ruột thừa viêm",
+    "price": 5000000
+  },
+  {
+    "code": "MO033",
+    "name": "Chụp CT đầu 5",
+    "description": "Chụp CT não để phát hiện các tổn thương",
+    "price": 1200000
+  },
+  {
+    "code": "MO034",
+    "name": "Phẫu thuật sỏi thận 4",
+    "description": "Lấy sỏi ra khỏi thận bằng nội soi",
+    "price": 8000000
+  },
+  {
+    "code": "MO035",
+    "name": "Phẫu thuật sỏi thận 5",
+    "description": "Lấy sỏi ra khỏi thận bằng nội soi",
+    "price": 8000000
+  },
+  {
+    "code": "MO036",
+    "name": "Tiêm phòng cúm 5",
+    "description": "Tiêm vắc-xin phòng bệnh cúm",
+    "price": 180000
+  },
+  {
+    "code": "MO037",
+    "name": "Tiêm ngừa viêm gan B 2",
+    "description": "Tiêm vắc-xin phòng viêm gan B",
+    "price": 220000
+  },
+  {
+    "code": "MO038",
+    "name": "Tiêm phòng cúm 6",
+    "description": "Tiêm vắc-xin phòng bệnh cúm",
+    "price": 180000
+  },
+  {
+    "code": "MO039",
+    "name": "Tiêm phòng cúm 7",
+    "description": "Tiêm vắc-xin phòng bệnh cúm",
+    "price": 180000
+  },
+  {
+    "code": "MO040",
+    "name": "Tiêm ngừa viêm gan B 3",
+    "description": "Tiêm vắc-xin phòng viêm gan B",
+    "price": 220000
+  },
+  {
+    "code": "MO041",
+    "name": "Xét nghiệm nước tiểu 4",
+    "description": "Phân tích nước tiểu để kiểm tra sức khỏe",
+    "price": 100000
+  },
+  {
+    "code": "MO042",
+    "name": "Khám chuyên khoa nội 5",
+    "description": "Khám và tư vấn bệnh lý nội khoa",
+    "price": 300000
+  },
+  {
+    "code": "MO043",
+    "name": "Xét nghiệm máu 6",
+    "description": "Xét nghiệm tổng quát các thành phần máu",
+    "price": 150000
+  },
+  {
+    "code": "MO044",
+    "name": "Chụp CT đầu 6",
+    "description": "Chụp CT não để phát hiện các tổn thương",
+    "price": 1200000
+  },
+  {
+    "code": "MO045",
+    "name": "Tiêm ngừa viêm gan B 4",
+    "description": "Tiêm vắc-xin phòng viêm gan B",
+    "price": 220000
+  },
+  {
+    "code": "MO046",
+    "name": "Xét nghiệm nước tiểu 5",
+    "description": "Phân tích nước tiểu để kiểm tra sức khỏe",
+    "price": 100000
+  },
+  {
+    "code": "MO047",
+    "name": "Chụp CT đầu 7",
+    "description": "Chụp CT não để phát hiện các tổn thương",
+    "price": 1200000
+  },
+  {
+    "code": "MO048",
+    "name": "Khám tổng quát",
+    "description": "Khám sức khỏe tổng quát định kỳ",
+    "price": 250000
+  },
+  {
+    "code": "MO049",
+    "name": "Khám tổng quát 2",
+    "description": "Khám sức khỏe tổng quát định kỳ",
+    "price": 250000
+  },
+  {
+    "code": "MO050",
+    "name": "Chụp X-quang phổi 4",
+    "description": "Kiểm tra các bệnh liên quan đến phổi",
+    "price": 200000
+  },
+  {
+    "code": "MO051",
+    "name": "Chụp X-quang phổi 5",
+    "description": "Kiểm tra các bệnh liên quan đến phổi",
+    "price": 200000
+  },
+  {
+    "code": "MO052",
+    "name": "Phẫu thuật ruột thừa 7",
+    "description": "Cắt bỏ ruột thừa viêm",
+    "price": 5000000
+  },
+  {
+    "code": "MO053",
+    "name": "Tiêm ngừa viêm gan B 5",
+    "description": "Tiêm vắc-xin phòng viêm gan B",
+    "price": 220000
+  },
+  {
+    "code": "MO054",
+    "name": "Tiêm ngừa viêm gan B 6",
+    "description": "Tiêm vắc-xin phòng viêm gan B",
+    "price": 220000
+  },
+  {
+    "code": "MO055",
+    "name": "Xét nghiệm máu 7",
+    "description": "Xét nghiệm tổng quát các thành phần máu",
+    "price": 150000
+  },
+  {
+    "code": "MO056",
+    "name": "Khám chuyên khoa nội 6",
+    "description": "Khám và tư vấn bệnh lý nội khoa",
+    "price": 300000
+  },
+  {
+    "code": "MO057",
+    "name": "Tiêm phòng cúm 8",
+    "description": "Tiêm vắc-xin phòng bệnh cúm",
+    "price": 180000
+  },
+  {
+    "code": "MO058",
+    "name": "Xét nghiệm máu 8",
+    "description": "Xét nghiệm tổng quát các thành phần máu",
+    "price": 150000
+  },
+  {
+    "code": "MO059",
+    "name": "Xét nghiệm máu 9",
+    "description": "Xét nghiệm tổng quát các thành phần máu",
+    "price": 150000
+  },
+  {
+    "code": "MO060",
+    "name": "Chụp X-quang phổi 6",
+    "description": "Kiểm tra các bệnh liên quan đến phổi",
+    "price": 200000
+  },
+  {
+    "code": "MO061",
+    "name": "Phẫu thuật sỏi thận 6",
+    "description": "Lấy sỏi ra khỏi thận bằng nội soi",
+    "price": 8000000
+  },
+  {
+    "code": "MO062",
+    "name": "Chụp X-quang phổi 7",
+    "description": "Kiểm tra các bệnh liên quan đến phổi",
+    "price": 200000
+  },
+  {
+    "code": "MO063",
+    "name": "Phẫu thuật ruột thừa 8",
+    "description": "Cắt bỏ ruột thừa viêm",
+    "price": 5000000
+  },
+  {
+    "code": "MO064",
+    "name": "Xét nghiệm nước tiểu 6",
+    "description": "Phân tích nước tiểu để kiểm tra sức khỏe",
+    "price": 100000
+  },
+  {
+    "code": "MO065",
+    "name": "Chụp X-quang phổi 8",
+    "description": "Kiểm tra các bệnh liên quan đến phổi",
+    "price": 200000
+  },
+  {
+    "code": "MO066",
+    "name": "Tiêm phòng cúm 9",
+    "description": "Tiêm vắc-xin phòng bệnh cúm",
+    "price": 180000
+  },
+  {
+    "code": "MO067",
+    "name": "Xét nghiệm nước tiểu 7",
+    "description": "Phân tích nước tiểu để kiểm tra sức khỏe",
+    "price": 100000
+  },
+  {
+    "code": "MO068",
+    "name": "Tiêm phòng cúm 10",
+    "description": "Tiêm vắc-xin phòng bệnh cúm",
+    "price": 180000
+  },
+  {
+    "code": "MO069",
+    "name": "Chụp X-quang phổi 9",
+    "description": "Kiểm tra các bệnh liên quan đến phổi",
+    "price": 200000
+  },
+  {
+    "code": "MO070",
+    "name": "Tiêm phòng cúm 11",
+    "description": "Tiêm vắc-xin phòng bệnh cúm",
+    "price": 180000
+  },
+  {
+    "code": "MO071",
+    "name": "Xét nghiệm nước tiểu 8",
+    "description": "Phân tích nước tiểu để kiểm tra sức khỏe",
+    "price": 100000
+  },
+  {
+    "code": "MO072",
+    "name": "Tiêm ngừa viêm gan B 7",
+    "description": "Tiêm vắc-xin phòng viêm gan B",
+    "price": 220000
+  },
+  {
+    "code": "MO073",
+    "name": "Xét nghiệm máu 10",
+    "description": "Xét nghiệm tổng quát các thành phần máu",
+    "price": 150000
+  },
+  {
+    "code": "MO074",
+    "name": "Khám chuyên khoa nội 7",
+    "description": "Khám và tư vấn bệnh lý nội khoa",
+    "price": 300000
+  },
+  {
+    "code": "MO075",
+    "name": "Khám tổng quát 3",
+    "description": "Khám sức khỏe tổng quát định kỳ",
+    "price": 250000
+  },
+  {
+    "code": "MO076",
+    "name": "Tiêm ngừa viêm gan B 8",
+    "description": "Tiêm vắc-xin phòng viêm gan B",
+    "price": 220000
+  },
+  {
+    "code": "MO077",
+    "name": "Tiêm ngừa viêm gan B 9",
+    "description": "Tiêm vắc-xin phòng viêm gan B",
+    "price": 220000
+  },
+  {
+    "code": "MO078",
+    "name": "Xét nghiệm nước tiểu 9",
+    "description": "Phân tích nước tiểu để kiểm tra sức khỏe",
+    "price": 100000
+  },
+  {
+    "code": "MO079",
+    "name": "Khám tổng quát 4",
+    "description": "Khám sức khỏe tổng quát định kỳ",
+    "price": 250000
+  },
+  {
+    "code": "MO080",
+    "name": "Khám chuyên khoa nội 8",
+    "description": "Khám và tư vấn bệnh lý nội khoa",
+    "price": 300000
+  },
+  {
+    "code": "MO081",
+    "name": "Chụp CT đầu 8",
+    "description": "Chụp CT não để phát hiện các tổn thương",
+    "price": 1200000
+  },
+  {
+    "code": "MO082",
+    "name": "Chụp CT đầu 9",
+    "description": "Chụp CT não để phát hiện các tổn thương",
+    "price": 1200000
+  },
+  {
+    "code": "MO083",
+    "name": "Khám tổng quát 5",
+    "description": "Khám sức khỏe tổng quát định kỳ",
+    "price": 250000
+  },
+  {
+    "code": "MO084",
+    "name": "Xét nghiệm máu 11",
+    "description": "Xét nghiệm tổng quát các thành phần máu",
+    "price": 150000
+  },
+  {
+    "code": "MO085",
+    "name": "Phẫu thuật ruột thừa 9",
+    "description": "Cắt bỏ ruột thừa viêm",
+    "price": 5000000
+  },
+  {
+    "code": "MO086",
+    "name": "Xét nghiệm máu 12",
+    "description": "Xét nghiệm tổng quát các thành phần máu",
+    "price": 150000
+  },
+  {
+    "code": "MO087",
+    "name": "Tiêm ngừa viêm gan B 10",
+    "description": "Tiêm vắc-xin phòng viêm gan B",
+    "price": 220000
+  },
+  {
+    "code": "MO088",
+    "name": "Xét nghiệm nước tiểu 10",
+    "description": "Phân tích nước tiểu để kiểm tra sức khỏe",
+    "price": 100000
+  },
+  {
+    "code": "MO089",
+    "name": "Xét nghiệm nước tiểu 11",
+    "description": "Phân tích nước tiểu để kiểm tra sức khỏe",
+    "price": 100000
+  },
+  {
+    "code": "MO090",
+    "name": "Xét nghiệm máu 13",
+    "description": "Xét nghiệm tổng quát các thành phần máu",
+    "price": 150000
+  },
+  {
+    "code": "MO091",
+    "name": "Phẫu thuật sỏi thận 7",
+    "description": "Lấy sỏi ra khỏi thận bằng nội soi",
+    "price": 8000000
+  },
+  {
+    "code": "MO092",
+    "name": "Xét nghiệm nước tiểu 12",
+    "description": "Phân tích nước tiểu để kiểm tra sức khỏe",
+    "price": 100000
+  },
+  {
+    "code": "MO093",
+    "name": "Xét nghiệm máu 14",
+    "description": "Xét nghiệm tổng quát các thành phần máu",
+    "price": 150000
+  },
+  {
+    "code": "MO094",
+    "name": "Tiêm phòng cúm 12",
+    "description": "Tiêm vắc-xin phòng bệnh cúm",
+    "price": 180000
+  },
+  {
+    "code": "MO095",
+    "name": "Xét nghiệm máu 15",
+    "description": "Xét nghiệm tổng quát các thành phần máu",
+    "price": 150000
+  },
+  {
+    "code": "MO096",
+    "name": "Tiêm ngừa viêm gan B 11",
+    "description": "Tiêm vắc-xin phòng viêm gan B",
+    "price": 220000
+  },
+  {
+    "code": "MO097",
+    "name": "Khám chuyên khoa nội 9",
+    "description": "Khám và tư vấn bệnh lý nội khoa",
+    "price": 300000
+  },
+  {
+    "code": "MO098",
+    "name": "Tiêm phòng cúm 13",
+    "description": "Tiêm vắc-xin phòng bệnh cúm",
+    "price": 180000
+  },
+  {
+    "code": "MO099",
+    "name": "Khám chuyên khoa nội 10",
+    "description": "Khám và tư vấn bệnh lý nội khoa",
+    "price": 300000
+  }
+]

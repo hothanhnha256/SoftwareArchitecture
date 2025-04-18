@@ -12,10 +12,10 @@ public class MedicalOrderItemSpecification {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (code != null) {
-                predicates.add(criteriaBuilder.like(root.get("code"), "%" + code + "%"));
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("code")), "%" + code.toLowerCase() + "%"));
             }
             if (name != null) {
-                predicates.add(criteriaBuilder.like(root.get("name"), "%" + name + "%"));
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };

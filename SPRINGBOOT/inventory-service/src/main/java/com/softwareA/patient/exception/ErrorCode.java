@@ -28,6 +28,7 @@ public enum ErrorCode {
 
     INVALID_DOB(1008, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
     FORBIDDEN(1009, "Forbidden", HttpStatus.FORBIDDEN),
+    CONFLICT(1111, "Conflict", HttpStatus.CONFLICT),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
