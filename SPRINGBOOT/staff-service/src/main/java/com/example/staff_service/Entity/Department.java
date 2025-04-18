@@ -27,4 +27,5 @@ public class Department {
         this.name = name;
         this.description = description;
     }
+
 }

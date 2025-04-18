@@ -29,11 +29,11 @@ public class StaffService {
     public Optional<Staff> getStaffById(String id) {
         return staffRepository.findById(id);
     }
-    public List<Staff> getStaffByDepartmentId(String departmentId) {
+    public List<Staff> getStaffByDepartmentIdAndRole(String departmentId, String role) {
         if (!departmentRepository.existsById(departmentId)) {
             throw new ResourceNotFoundException("Department not found with id: " + departmentId);
         }
-        return staffRepository.findByDepartmentId(departmentId);
+        return staffRepository.findByDepartmentIdAndRole(departmentId, role);
     }
 
 
@@ -46,10 +46,16 @@ public class StaffService {
         Staff existing = staffRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Staff not found with id: " + id));
 
+
         existing.setName(staffDetails.getName());
         existing.setRole(staffDetails.getRole());
         existing.setPhoneNumber(staffDetails.getPhoneNumber());
         existing.setAddress(staffDetails.getAddress());
+        if (staffDetails.getDepartmentId() != null) {
+            if (!departmentRepository.existsById(staffDetails.getDepartmentId())) {
+                throw new ResourceNotFoundException("Department not found with id: " + staffDetails.getDepartmentId());
+            }
+        }
         existing.setDepartmentId(staffDetails.getDepartmentId());
 
         return staffRepository.save(existing);

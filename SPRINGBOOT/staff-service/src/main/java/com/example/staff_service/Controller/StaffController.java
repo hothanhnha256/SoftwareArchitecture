@@ -62,8 +62,14 @@ public class StaffController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
     @GetMapping("/department/{departmentId}")
-    public ResponseEntity<ApiResponse<List<Staff>>> getStaffByDepartmentId(@PathVariable String departmentId) {
-        List<Staff> staffList = staffService.getStaffByDepartmentId(departmentId);
+    public ResponseEntity<ApiResponse<List<Staff>>> getStaffByDepartmentIdAndRole(@PathVariable String departmentId, @RequestParam(required = false) String role) {
+        List<Staff> staffList;
+        if(role == null){
+            staffList = staffService.getStaffByDepartmentId(departmentId);
+        }
+        else {
+            staffList = staffService.getStaffByDepartmentIdAndRole(departmentId, role);
+        }
         if (staffList.isEmpty()) {
             return ResponseEntity.ok(ApiResponse.<List<Staff>>builder()
                     .code(204)
