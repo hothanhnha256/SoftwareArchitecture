@@ -101,12 +101,10 @@ public class AppointmentService {
                 .map(appointment -> {
                     Doctor doctor = null;
                     Shift shift = null;
-                    try
-                    {
+                    try {
                         doctor = staffClient.getDoctorById(appointment.getDoctorId()).getResult();
                         shift = staffClient.getShiftById(appointment.getShiftId()).getResult();
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         log.error("Doctor or shift not found");
                     }
 

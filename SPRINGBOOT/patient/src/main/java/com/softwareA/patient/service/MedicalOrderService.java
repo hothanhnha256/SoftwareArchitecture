@@ -42,6 +42,7 @@ public class MedicalOrderService {
     private final MedicalOrderItemValidator medicalOrderItemValidator;
     private final MedicalOrderMapper medicalOrderMapper;
     private final StaffClient staffClient;
+    private final PatientValidator patientValidator;
     private final PatientMapper patientMapper;
 
     @Transactional
@@ -90,11 +91,11 @@ public class MedicalOrderService {
             throw new AppException(ErrorCode.MEDICAL_ORDER_ITEM_NOT_FOUND, "Medical order not found");
         }
         MedicalOrder order = medicalOrderOptional.get();
+        MedicalOrderResponse response = medicalOrderMapper.toMedicalOrderResponse(order);
         // GET MEDICAL ORDER ITEMS MAPPING OF THIS ORDER
         List<MedicalOrder_OrderItem> order_orderItems = medicalOrder_orderItemRepository.findByMedicalOrderId(id);
         // GET MEDICAL ORDER ITEMS INFO FROM INVENTORY SERVICE
         integrateMedicalItemInfo(order_orderItems);
-        MedicalOrderResponse response = medicalOrderMapper.toMedicalOrderResponse(order);
         response.setMedicalOrderItems(order_orderItems); // add the order items to the response
         // get patient info
         patientRepository.findById(order.getPatientId()).ifPresent(patient -> {
