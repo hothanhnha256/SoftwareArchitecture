@@ -11,5 +11,7 @@ import java.util.List;
 public interface StaffRepository extends MongoRepository<Staff, String> {
     List<Staff> findByDepartmentId(String departmentId);
     List<Staff> findAllById(List<String> ids);
+    List<Staff> findByDepartmentIdAndRole(String departmentId, String role);
+
 
 }

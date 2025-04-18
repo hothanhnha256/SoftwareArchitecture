@@ -31,6 +31,12 @@ public class StaffService {
     public Optional<Staff> getStaffById(String id) {
         return staffRepository.findById(id);
     }
+    public List<Staff> getStaffByDepartmentIdAndRole(String departmentId, String role) {
+        if (!departmentRepository.existsById(departmentId)) {
+            throw new ResourceNotFoundException("Department not found with id: " + departmentId);
+        }
+        return staffRepository.findByDepartmentIdAndRole(departmentId, role);
+    }
     public List<Staff> getStaffByDepartmentId(String departmentId) {
         if (!departmentRepository.existsById(departmentId)) {
             throw new ResourceNotFoundException("Department not found with id: " + departmentId);
