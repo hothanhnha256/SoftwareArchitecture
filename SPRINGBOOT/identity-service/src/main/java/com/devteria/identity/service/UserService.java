@@ -4,31 +4,31 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-import com.devteria.identity.dto.request.*;
-import com.devteria.identity.feignclient.PatientServiceClient;
-import com.devteria.identity.feignclient.StaffServiceClient;
-import com.devteria.identity.mapper.PatientMapper;
-import com.devteria.identity.mapper.StaffMapper;
-import feign.FeignException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.devteria.identity.constant.Roles;
+import com.devteria.identity.dto.request.*;
 import com.devteria.identity.dto.response.UserResponse;
 import com.devteria.identity.entity.User;
 import com.devteria.identity.exception.AppException;
 import com.devteria.identity.exception.ErrorCode;
+import com.devteria.identity.feignclient.PatientServiceClient;
+import com.devteria.identity.feignclient.StaffServiceClient;
+import com.devteria.identity.mapper.PatientMapper;
+import com.devteria.identity.mapper.StaffMapper;
 import com.devteria.identity.mapper.UserMapper;
 import com.devteria.identity.repository.UserRepository;
 
+import feign.FeignException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -131,7 +131,6 @@ public class UserService {
         return userMapper.toUserResponse(user);
     }
 
-
     public UserResponse getMyInfo() {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
@@ -146,7 +145,6 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         user.setUpdatedAt(LocalDate.now());
-
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 

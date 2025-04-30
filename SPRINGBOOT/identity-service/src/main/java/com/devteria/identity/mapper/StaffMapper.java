@@ -1,12 +1,12 @@
 package com.devteria.identity.mapper;
 
-import com.devteria.identity.dto.request.CreatePatientAccount;
-import com.devteria.identity.dto.request.CreateStaffAccountDTO;
-import com.devteria.identity.dto.request.CreateStaffDTO;
-import com.devteria.identity.dto.request.UserCreationRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+
+import com.devteria.identity.dto.request.CreateStaffAccountDTO;
+import com.devteria.identity.dto.request.CreateStaffDTO;
+import com.devteria.identity.dto.request.UserCreationRequest;
 
 @Mapper(componentModel = "spring")
 public interface StaffMapper {
@@ -18,6 +18,6 @@ public interface StaffMapper {
 
     @Named("concatNames")
     default String concatNames(String lastName, String firstName) {
-        return lastName + " " + firstName;  // Concatenate firstname and lastname
+        return lastName + " " + firstName; // Concatenate firstname and lastname
     }
 }

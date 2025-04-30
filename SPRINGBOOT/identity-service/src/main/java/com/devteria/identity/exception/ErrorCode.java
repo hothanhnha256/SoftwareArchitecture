@@ -18,8 +18,7 @@ public enum ErrorCode {
     INVALID_DOB(1008, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
     INTERNAL_SERVER_ERROR(1009, "Internal server error", HttpStatus.INTERNAL_SERVER_ERROR),
     FAILED_TO_CREATE_PATIENT(1010, "Failed to create patient", HttpStatus.INTERNAL_SERVER_ERROR),
-    FAILED_TO_CREATE_STAFF(1011, "Failed to create staff", HttpStatus.INTERNAL_SERVER_ERROR)
-    ;
+    FAILED_TO_CREATE_STAFF(1011, "Failed to create staff", HttpStatus.INTERNAL_SERVER_ERROR);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
