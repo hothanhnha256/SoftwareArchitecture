@@ -46,7 +46,7 @@ public class WebClientConfiguration {
         log.info("corsWebFilter");
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 //        corsConfiguration.setAllowedOrigins(List.of("*"));
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173", "https://0ee4-115-79-30-18.ngrok-free.app"));
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5500"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
         corsConfiguration.setAllowedMethods(List.of("*"));
         corsConfiguration.setAllowCredentials(true);

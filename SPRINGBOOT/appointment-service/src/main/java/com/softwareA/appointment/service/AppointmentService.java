@@ -188,6 +188,9 @@ public class AppointmentService {
         }
         List<Doctor> doctors = doctorResponse.getResult();
         // check if this shift, doctor is available
+        if(doctors == null || doctors.isEmpty()) {
+            return new ArrayList<>();
+        }
         doctors = doctors.stream().filter(doctor ->
                 _checkIfAppointmentIsValid(doctor.getId(), shiftId)
         ).toList();

@@ -6,6 +6,7 @@ import com.softwareA.patient.dto.response.MedicalOrderResponse;
 import com.softwareA.patient.model.MedicalOrder;
 import com.softwareA.patient.model.auth.AuthInfo;
 import com.softwareA.patient.service.MedicalOrderService;
+import com.softwareA.patient.utils.MedicalOrderPDFPrinter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class MedicalOrderController {
     private static final Logger log = LoggerFactory.getLogger(MedicalOrderController.class);
     private final MedicalOrderService medicalOrderService;
+    private final MedicalOrderPDFPrinter medicalOrderPDFPrinter;
 
     @PostMapping("")
     public ResponseEntity<ApiResponse<MedicalOrder>> createMedicalOrder(@RequestHeader("UserRole") String userRole,
@@ -35,10 +37,27 @@ public class MedicalOrderController {
                 .build());
     }
 
+    @GetMapping("/{id}/pdf")
+    public ResponseEntity<ApiResponse<byte []>> getMedicalOrderByIdPDF(@RequestHeader("UserRole") String userRole,
+                                                                                 @RequestHeader("UserId") String userId,
+                                                                                 @PathVariable String id) {
+        log.info("getMedicalOrderByIdPDF with id: {}\nUserRole: {}\nUserId: {}", id, userRole, userId);
+        AuthInfo authInfo = AuthInfo.builder()
+                .userId(userId)
+                .userRole(userRole)
+                .build();
+        MedicalOrderResponse medicalOrder = this.medicalOrderService.getMedicalOrderById(id, authInfo);
+        // convert to pdf byte stream
+        byte [] pdfResult = medicalOrderPDFPrinter.print(medicalOrder);
+        return ResponseEntity.ok().body(ApiResponse.<byte []>builder()
+                .result(pdfResult)
+                .build());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<MedicalOrderResponse>> getMedicalOrderById(@RequestHeader("UserRole") String userRole,
-                                                                         @RequestHeader("UserId") String userId,
-                                                                         @PathVariable String id) {
+                                                                                 @RequestHeader("UserId") String userId,
+                                                                                 @PathVariable String id) {
         log.info("Get medical order with id: {}\nUserRole: {}\nUserId: {}", id, userRole, userId);
         AuthInfo authInfo = AuthInfo.builder()
                 .userId(userId)

@@ -14,4 +14,5 @@ public class Doctor {
     String departmentId;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     Department department;
+    String jobTitle;
 }
