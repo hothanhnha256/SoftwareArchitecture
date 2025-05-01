@@ -69,7 +69,7 @@ public class WorkingShiftService {
             workingShifts = workingShiftRepository.findAll();
         }
         return workingShifts.stream()
-                .map(shift -> new WorkingShiftResponse(shift.getDate(), shift.getHours()))
+                .map(shift -> new WorkingShiftResponse(shift.getId(), shift.getDate(), shift.getHours()))
                 .collect(Collectors.toList());
     }
     public WorkingShift getWorkingShiftById(String workingShiftId) {

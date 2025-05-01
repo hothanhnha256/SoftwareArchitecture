@@ -22,4 +22,5 @@ public class MedicalOrderItem {
     @NotNull
     @PositiveOrZero(message = "Price must be 0 or greater")
     Double price;
+    String departmentId;
 }

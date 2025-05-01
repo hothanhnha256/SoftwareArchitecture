@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @FeignClient(name = "staff-service", url = "${staff-service.url}")
@@ -27,5 +28,9 @@ public interface StaffClient {
     @GetMapping("/working-shifts/shift-id")
     ApiResponse<Shift> getShiftByDateTime(@RequestParam("date") String date,
                                           @RequestParam("hours") Integer hour);
+
+    @GetMapping("/working-shifts")
+    ApiResponse<List<Shift>> getShiftOverAPeriod(@RequestParam("startDate") String startDate,
+                                          @RequestParam("endDate") String endDate);
 
 }

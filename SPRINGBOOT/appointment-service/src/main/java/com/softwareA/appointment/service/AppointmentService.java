@@ -3,10 +3,7 @@ package com.softwareA.appointment.service;
 import com.softwareA.appointment.client.DepartmentClient;
 import com.softwareA.appointment.client.PatientClient;
 import com.softwareA.appointment.client.StaffClient;
-import com.softwareA.appointment.dto.request.CreateAppointmentDTO;
-import com.softwareA.appointment.dto.request.GetAppointmentsDTO;
-import com.softwareA.appointment.dto.request.GetAvailableDoctorsDTO;
-import com.softwareA.appointment.dto.request.UpdateAppointmentDTO;
+import com.softwareA.appointment.dto.request.*;
 import com.softwareA.appointment.dto.response.AppointmentDetailDTO;
 import com.softwareA.appointment.exception.AppException;
 import com.softwareA.appointment.exception.ErrorCode;
@@ -21,12 +18,15 @@ import com.softwareA.appointment.strategy.AppointmentUpdateStrategy;
 import com.softwareA.patient.dto.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -87,9 +87,27 @@ public class AppointmentService {
         } else {
             throw new AppException(ErrorCode.FORBIDDEN, "Only user and doctor are allowed to get appointments");
         }
-        List<UUID> shiftIds = new ArrayList<>();
+        List<String> shiftIds = new ArrayList<>();
+        try {
+            ApiResponse<List<Shift>> shiftResponse = staffClient.getShiftOverAPeriod(dto.getStartDate(), dto.getEndDate());
+            log.info(shiftResponse.getResult().size() + " shifts found");
+            staffClient.getShiftOverAPeriod(dto.getStartDate(), dto.getEndDate()).getResult()
+                    .forEach(shift -> {
+                        log.info("Shift info: " + shift.getId());
+                        shiftIds.add(shift.getId());
+                    });
+        } catch (Exception e) {
+            log.error("Shift not found");
+        }
         //TODO: add shiftIds
-        Specification<Appointment> spec = AppointmentSpecification.getAppointmentsWithFilter(patientId, doctorId, shiftIds, dto.getStatus() != null ? dto.getStatus().toString() : null);
+        GetAppointmentFilter filter = GetAppointmentFilter.builder()
+                .patientIds(patientId != null ? List.of(patientId) : null)
+                .doctorIds(doctorId != null ? List.of(doctorId) : null)
+                .shiftIds(shiftIds)
+                .status(dto.getStatus() != null ? dto.getStatus().toString() : null)
+                .build();
+
+        Specification<Appointment> spec = AppointmentSpecification.getAppointmentsWithFilter(filter);
 
         Page<Appointment> appointmentPage = appointmentRepository.findAll(spec, pageable);
 
@@ -128,6 +146,7 @@ public class AppointmentService {
             throw new AppException(ErrorCode.FORBIDDEN, "Only user are allowed to create an appointment");
         }
         // to check if this patient exists
+        log.info("UserId" + userId.toString());
         Patient patientApiResponse = patientClient.getPatientInfo(userId.toString(), role).getResult();
         if (patientApiResponse == null) {
             throw new AppException(ErrorCode.RESOURCE_NOT_FOUND, "Patient not found");
@@ -188,7 +207,7 @@ public class AppointmentService {
         }
         List<Doctor> doctors = doctorResponse.getResult();
         // check if this shift, doctor is available
-        if(doctors == null || doctors.isEmpty()) {
+        if (doctors == null || doctors.isEmpty()) {
             return new ArrayList<>();
         }
         doctors = doctors.stream().filter(doctor ->

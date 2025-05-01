@@ -58,9 +58,9 @@ public class AppointmentController {
 
     @GetMapping("/all")
     public ResponseEntity<ApiResponse<List<Appointment>>> getAppointments(@RequestHeader(name = "UserId") String userId,
-                                                                                   @RequestHeader(name = "UserRole") String role,
-                                                                                   @ModelAttribute GetAppointmentsDTO dto,
-                                                                                   @PageableDefault(size = 10, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+                                                                          @RequestHeader(name = "UserRole") String role,
+                                                                          @ModelAttribute GetAppointmentsDTO dto,
+                                                                          @PageableDefault(size = 10, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         log.info("getAppointments");
         UUID userUUID;
         try {
@@ -68,6 +68,8 @@ public class AppointmentController {
         } catch (IllegalArgumentException e) {
             throw new AppException(ErrorCode.INVALID_UUID);
         }
+
+        dto.validateDateRange();
 
         Page<Appointment> appointmentPage = this.appointmentService.getAppointments(userUUID, role, dto, pageable);
 
