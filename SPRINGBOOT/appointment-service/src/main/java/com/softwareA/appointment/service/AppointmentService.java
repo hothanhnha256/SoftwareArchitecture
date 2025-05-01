@@ -7,6 +7,8 @@ import com.softwareA.appointment.dto.request.*;
 import com.softwareA.appointment.dto.response.AppointmentDetailDTO;
 import com.softwareA.appointment.exception.AppException;
 import com.softwareA.appointment.exception.ErrorCode;
+import com.softwareA.appointment.filter.AppointmentRoleFilterStrategy;
+import com.softwareA.appointment.filter.AppointmentRoleFilterStrategyFactory;
 import com.softwareA.appointment.model.Department;
 import com.softwareA.appointment.model.appointment.Appointment;
 import com.softwareA.appointment.model.patient.Patient;
@@ -76,17 +78,13 @@ public class AppointmentService {
         return appointmentRepository.save(updatedAppointment);
     }
 
+    private void patientFilter(GetAppointmentFilter dto) {
+    }
+
     public Page<Appointment> getAppointments(UUID userId, String role, GetAppointmentsDTO dto, Pageable pageable) {
-        // to check authorization
-        UUID patientId = null;
-        UUID doctorId = null;
-        if (role.equals("USER")) {
-            patientId = userId;
-        } else if (role.equals("DOCTOR")) {
-            doctorId = userId;
-        } else {
-            throw new AppException(ErrorCode.FORBIDDEN, "Only user and doctor are allowed to get appointments");
-        }
+
+        AppointmentRoleFilterStrategy filterStrategy = AppointmentRoleFilterStrategyFactory.getStrategy(role);
+        GetAppointmentFilter filter = filterStrategy.applyRoleFilter(userId, dto);
         List<String> shiftIds = new ArrayList<>();
         try {
             ApiResponse<List<Shift>> shiftResponse = staffClient.getShiftOverAPeriod(dto.getStartDate(), dto.getEndDate());
@@ -99,13 +97,8 @@ public class AppointmentService {
         } catch (Exception e) {
             log.error("Shift not found");
         }
-        //TODO: add shiftIds
-        GetAppointmentFilter filter = GetAppointmentFilter.builder()
-                .patientIds(patientId != null ? List.of(patientId) : null)
-                .doctorIds(doctorId != null ? List.of(doctorId) : null)
-                .shiftIds(shiftIds)
-                .status(dto.getStatus() != null ? dto.getStatus().toString() : null)
-                .build();
+        filter.setShiftIds(shiftIds);
+        filter.setStatus(dto.getStatus() != null ? dto.getStatus().toString() : null);
 
         Specification<Appointment> spec = AppointmentSpecification.getAppointmentsWithFilter(filter);
 
