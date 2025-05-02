@@ -1,14 +1,11 @@
 package com.softwareA.patient.service;
 
-import com.softwareA.patient.dto.request.CreateEmergencyContactDTO;
 import com.softwareA.patient.dto.request.CreatePatientDTO;
 import com.softwareA.patient.dto.request.PatientSearchRequest;
-import com.softwareA.patient.dto.request.UpdateEmergencyContactDTO;
 import com.softwareA.patient.dto.request.UpdatePatientDTO;
 import com.softwareA.patient.exception.AppException;
 import com.softwareA.patient.exception.ErrorCode;
-import com.softwareA.patient.model.EmergencyContact;
-import com.softwareA.patient.model.Patient;
+import com.softwareA.patient.model.patient.Patient;
 import com.softwareA.patient.repository.EmergencyContactRepository;
 import com.softwareA.patient.repository.PatientRepository;
 import com.softwareA.patient.specification.PatientSpecification;
@@ -21,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

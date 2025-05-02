@@ -1,6 +1,6 @@
 package com.softwareA.patient.repository;
 
-import com.softwareA.patient.model.Patient;
+import com.softwareA.patient.model.patient.Patient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

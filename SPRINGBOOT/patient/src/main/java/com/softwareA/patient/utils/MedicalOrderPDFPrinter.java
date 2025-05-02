@@ -9,8 +9,7 @@ import com.lowagie.text.pdf.PdfWriter;
 import com.softwareA.patient.dto.Staff;
 import com.softwareA.patient.dto.response.MedicalOrderResponse;
 import com.softwareA.patient.dto.response.PatientGeneralDTO;
-import com.softwareA.patient.model.MedicalOrder;
-import com.softwareA.patient.model.MedicalOrder_OrderItem;
+import com.softwareA.patient.model.medical_order.MedicalOrder_OrderItem;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 

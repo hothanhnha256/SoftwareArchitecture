@@ -2,6 +2,7 @@ package com.softwareA.patient.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
@@ -9,32 +10,24 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-// THUỐC MEN
 public class Medication {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    UUID id;
+    String code;
     @NotNull(message = "name is required")
-    @Column(nullable = false)
     String name;
     @NotNull(message = "manufacturer is required")
-    @Column(nullable = false)
-    private String manufacturer;
+    String manufacturer;
     @NotNull
-    @Column(nullable = false)
-    private String dosageForm; // e.g., Tablet, Syrup, Injection
+    String dosageForm; // e.g., Tablet, Syrup, Injection
     @NotNull
-    private String strength; // e.g., 500mg, 250mg/5mL
-    private String description;
-
-    // TIME INSERT
-    @CreationTimestamp
-    @Column(nullable = false, updatable = false)  // Auto-set timestamp, cannot be updated
-    private LocalDateTime createdAt;
+    String strength; // e.g., 500mg, 250mg/5mL
+    String description;
+    @NotNull
+    Integer quantity;
+    @NotNull
+    Double price;
+    LocalDateTime createdAt;
 }

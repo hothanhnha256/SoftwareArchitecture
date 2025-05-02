@@ -30,6 +30,10 @@ public enum ErrorCode {
 
     INVALID_DOB(1008, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
     FORBIDDEN(1009, "Forbidden", HttpStatus.FORBIDDEN),
+    MEDICAL_ORDER_NOT_FOUND(1010, "Medical order not found", HttpStatus.NOT_FOUND),
+    PRESCRIPTION_EXISTS(1011, "Prescription already exists for this medical order", HttpStatus.CONFLICT),
+    MEDICATION_NOT_FOUND(1012, "Medication not found", HttpStatus.NOT_FOUND),
+    PRESCRIPTION_NOT_FOUND(1013, "Prescription not found", HttpStatus.NOT_FOUND),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

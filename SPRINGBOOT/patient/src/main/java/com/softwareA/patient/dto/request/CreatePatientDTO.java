@@ -1,7 +1,7 @@
 package com.softwareA.patient.dto.request;
 
-import com.softwareA.patient.model.BloodType;
-import com.softwareA.patient.model.Sex;
+import com.softwareA.patient.model.patient.BloodType;
+import com.softwareA.patient.model.patient.Sex;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;

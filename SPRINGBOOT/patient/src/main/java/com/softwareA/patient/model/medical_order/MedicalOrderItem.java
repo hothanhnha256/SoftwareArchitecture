@@ -1,4 +1,4 @@
-package com.softwareA.patient.model;
+package com.softwareA.patient.model.medical_order;
 
 import lombok.Data;
 

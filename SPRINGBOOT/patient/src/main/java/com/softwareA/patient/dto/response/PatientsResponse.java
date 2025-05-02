@@ -1,6 +1,6 @@
 package com.softwareA.patient.dto.response;
 
-import com.softwareA.patient.model.Patient;
+import com.softwareA.patient.model.patient.Patient;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

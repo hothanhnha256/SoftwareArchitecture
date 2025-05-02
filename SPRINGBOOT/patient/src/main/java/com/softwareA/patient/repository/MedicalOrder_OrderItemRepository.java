@@ -1,6 +1,6 @@
 package com.softwareA.patient.repository;
 
-import com.softwareA.patient.model.MedicalOrder_OrderItem;
+import com.softwareA.patient.model.medical_order.MedicalOrder_OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

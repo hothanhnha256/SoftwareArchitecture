@@ -7,7 +7,7 @@ import com.softwareA.patient.dto.response.ApiResponse;
 import com.softwareA.patient.dto.response.PatientResponse;
 import com.softwareA.patient.exception.AppException;
 import com.softwareA.patient.exception.ErrorCode;
-import com.softwareA.patient.model.Patient;
+import com.softwareA.patient.model.patient.Patient;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;

@@ -1,7 +1,7 @@
 package com.softwareA.patient.specification;
 
 import com.softwareA.patient.dto.request.PatientSearchRequest;
-import com.softwareA.patient.model.Patient;
+import com.softwareA.patient.model.patient.Patient;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 

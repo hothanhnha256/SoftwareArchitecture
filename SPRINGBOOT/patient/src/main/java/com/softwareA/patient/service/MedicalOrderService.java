@@ -11,9 +11,9 @@ import com.softwareA.patient.exception.AppException;
 import com.softwareA.patient.exception.ErrorCode;
 import com.softwareA.patient.mapper.MedicalOrderMapper;
 import com.softwareA.patient.mapper.PatientMapper;
-import com.softwareA.patient.model.MedicalOrder;
-import com.softwareA.patient.model.MedicalOrderItem;
-import com.softwareA.patient.model.MedicalOrder_OrderItem;
+import com.softwareA.patient.model.medical_order.MedicalOrder;
+import com.softwareA.patient.model.medical_order.MedicalOrderItem;
+import com.softwareA.patient.model.medical_order.MedicalOrder_OrderItem;
 import com.softwareA.patient.model.auth.AuthInfo;
 import com.softwareA.patient.repository.MedicalOrderRepository;
 import com.softwareA.patient.repository.MedicalOrder_OrderItemRepository;
@@ -24,8 +24,6 @@ import feign.FeignException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -79,6 +77,20 @@ public class MedicalOrderService {
         }
         medicalOrder_orderItemRepository.saveAll(items);
         return medicalOrderRepository.save(medicalOrder);
+    }
+
+    public List<MedicalOrder> findMedicalOrders(AuthInfo authInfo) {
+        // FOR DOCTOR, PATIENT
+        if (!authInfo.getUserRole().equals("DOCTOR") && !authInfo.getUserRole().equals("USER")) {
+            throw new AppException(ErrorCode.FORBIDDEN, "You are not authorized to view this medical order");
+        }
+        List<MedicalOrder> medicalOrders = new ArrayList<>();
+        if (authInfo.getUserRole().equals("DOCTOR")) {
+            medicalOrders = medicalOrderRepository.findByDoctorId(authInfo.getUserId());
+        } else if (authInfo.getUserRole().equals("USER")) {
+            medicalOrders = medicalOrderRepository.findByPatientId(UUID.fromString(authInfo.getUserId()));
+        }
+        return medicalOrders;
     }
 
     public MedicalOrderResponse getMedicalOrderById(String id, AuthInfo authInfo) {

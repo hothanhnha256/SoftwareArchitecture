@@ -1,6 +1,6 @@
 package com.softwareA.patient.dto.request;
 
-import com.softwareA.patient.model.EmergencyContactRelationship;
+import com.softwareA.patient.model.patient.EmergencyContactRelationship;
 
 import lombok.*;
 

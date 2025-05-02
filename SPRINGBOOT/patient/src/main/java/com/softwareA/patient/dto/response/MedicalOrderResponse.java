@@ -1,8 +1,7 @@
 package com.softwareA.patient.dto.response;
 
 import com.softwareA.patient.dto.Staff;
-import com.softwareA.patient.model.MedicalOrder_OrderItem;
-import com.softwareA.patient.model.Patient;
+import com.softwareA.patient.model.medical_order.MedicalOrder_OrderItem;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;

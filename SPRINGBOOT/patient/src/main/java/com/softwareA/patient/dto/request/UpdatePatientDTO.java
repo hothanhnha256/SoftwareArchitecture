@@ -1,6 +1,6 @@
 package com.softwareA.patient.dto.request;
 
-import com.softwareA.patient.model.BloodType;
+import com.softwareA.patient.model.patient.BloodType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;

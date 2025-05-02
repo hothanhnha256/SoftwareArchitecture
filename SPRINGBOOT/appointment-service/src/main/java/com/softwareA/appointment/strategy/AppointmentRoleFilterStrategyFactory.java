@@ -1,4 +1,4 @@
-package com.softwareA.appointment.filter;
+package com.softwareA.appointment.strategy;
 
 public class AppointmentRoleFilterStrategyFactory {
     private AppointmentRoleFilterStrategyFactory() {

@@ -1,8 +1,7 @@
-package com.softwareA.patient.model;
+package com.softwareA.patient.model.medical_order;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

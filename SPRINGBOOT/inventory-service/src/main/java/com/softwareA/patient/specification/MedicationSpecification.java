@@ -15,6 +15,10 @@ public class MedicationSpecification {
             if (dto.getName() != null && !dto.getName().isEmpty()) {
                 predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + dto.getName().toLowerCase() + "%"));
             }
+
+            if (dto.getCode() != null && !dto.getCode().isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("code")), "%" + dto.getCode().toLowerCase() + "%"));
+            }
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }

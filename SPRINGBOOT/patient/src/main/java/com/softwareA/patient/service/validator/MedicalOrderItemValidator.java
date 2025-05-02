@@ -4,16 +4,12 @@ import com.softwareA.patient.client.InventoryClient;
 import com.softwareA.patient.dto.request.MedicalOrderItemDTO;
 import com.softwareA.patient.exception.AppException;
 import com.softwareA.patient.exception.ErrorCode;
-import com.softwareA.patient.model.MedicalOrderItem;
-import com.softwareA.patient.model.MedicalOrder_OrderItem;
+import com.softwareA.patient.model.medical_order.MedicalOrderItem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 

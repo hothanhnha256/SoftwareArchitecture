@@ -1,6 +1,6 @@
 package com.softwareA.patient.repository;
 
-import com.softwareA.patient.model.EmergencyContact;
+import com.softwareA.patient.model.patient.EmergencyContact;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

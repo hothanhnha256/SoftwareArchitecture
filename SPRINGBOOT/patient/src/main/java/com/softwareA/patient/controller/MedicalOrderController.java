@@ -3,7 +3,7 @@ package com.softwareA.patient.controller;
 import com.softwareA.patient.dto.request.CreateMedicalOrderDTO;
 import com.softwareA.patient.dto.response.ApiResponse;
 import com.softwareA.patient.dto.response.MedicalOrderResponse;
-import com.softwareA.patient.model.MedicalOrder;
+import com.softwareA.patient.model.medical_order.MedicalOrder;
 import com.softwareA.patient.model.auth.AuthInfo;
 import com.softwareA.patient.service.MedicalOrderService;
 import com.softwareA.patient.utils.MedicalOrderPDFPrinter;
@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,10 +39,24 @@ public class MedicalOrderController {
                 .build());
     }
 
+    @GetMapping("")
+    public ResponseEntity<ApiResponse<List<MedicalOrder>>> findMedicalOrders(@RequestHeader("UserRole") String userRole,
+                                                                             @RequestHeader("UserId") String userId) {
+        log.info("findMedicalOrders with data: \nUserRole: {}\nUserId: {}", userRole, userId);
+        AuthInfo authInfo = AuthInfo.builder()
+                .userId(userId)
+                .userRole(userRole)
+                .build();
+        List<MedicalOrder> medicalOrders = this.medicalOrderService.findMedicalOrders(authInfo);
+        return ResponseEntity.ok().body(ApiResponse.<List<MedicalOrder>>builder()
+                .result(medicalOrders)
+                .build());
+    }
+
     @GetMapping("/{id}/pdf")
-    public ResponseEntity<ApiResponse<byte []>> getMedicalOrderByIdPDF(@RequestHeader("UserRole") String userRole,
-                                                                                 @RequestHeader("UserId") String userId,
-                                                                                 @PathVariable String id) {
+    public ResponseEntity<ApiResponse<byte[]>> getMedicalOrderByIdPDF(@RequestHeader("UserRole") String userRole,
+                                                                      @RequestHeader("UserId") String userId,
+                                                                      @PathVariable String id) {
         log.info("getMedicalOrderByIdPDF with id: {}\nUserRole: {}\nUserId: {}", id, userRole, userId);
         AuthInfo authInfo = AuthInfo.builder()
                 .userId(userId)
@@ -48,8 +64,8 @@ public class MedicalOrderController {
                 .build();
         MedicalOrderResponse medicalOrder = this.medicalOrderService.getMedicalOrderById(id, authInfo);
         // convert to pdf byte stream
-        byte [] pdfResult = medicalOrderPDFPrinter.print(medicalOrder);
-        return ResponseEntity.ok().body(ApiResponse.<byte []>builder()
+        byte[] pdfResult = medicalOrderPDFPrinter.print(medicalOrder);
+        return ResponseEntity.ok().body(ApiResponse.<byte[]>builder()
                 .result(pdfResult)
                 .build());
     }

@@ -3,7 +3,7 @@ package com.softwareA.patient.controller;
 import com.softwareA.patient.dto.request.CreateEmergencyContactDTO;
 import com.softwareA.patient.dto.request.UpdateEmergencyContactDTO;
 import com.softwareA.patient.dto.response.ApiResponse;
-import com.softwareA.patient.model.EmergencyContact;
+import com.softwareA.patient.model.patient.EmergencyContact;
 import com.softwareA.patient.service.EmergencyContactService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

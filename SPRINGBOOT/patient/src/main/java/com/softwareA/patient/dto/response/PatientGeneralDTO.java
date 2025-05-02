@@ -1,6 +1,6 @@
 package com.softwareA.patient.dto.response;
 
-import com.softwareA.patient.model.Sex;
+import com.softwareA.patient.model.patient.Sex;
 import lombok.Data;
 
 import java.time.LocalDate;
