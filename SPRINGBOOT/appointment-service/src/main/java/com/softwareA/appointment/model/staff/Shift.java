@@ -3,11 +3,11 @@ package com.softwareA.appointment.model.staff;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 @Data
 public class Shift {
     String id;
-    Date date;
+    OffsetDateTime date;
     int hours;
 }

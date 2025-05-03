@@ -12,7 +12,10 @@ import java.util.UUID;
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, UUID>, JpaSpecificationExecutor<Appointment> {
     Optional<Appointment> findById(UUID appointmentId);
-    List<Appointment> findByPatientId(UUID patientId);
+
+    List<Appointment> findByPatientIdAndShiftId(UUID patientId, String shiftId);
+
     List<Appointment> findByDoctorId(String doctorId);
+
     List<Appointment> findByDoctorIdAndShiftId(String doctorId, String shiftId);
 }

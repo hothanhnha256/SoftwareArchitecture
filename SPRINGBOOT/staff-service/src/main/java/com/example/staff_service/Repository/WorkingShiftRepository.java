@@ -17,6 +17,9 @@ public interface WorkingShiftRepository extends MongoRepository<WorkingShift, St
     // Truy vấn WorkingShift theo khoảng thời gian
     List<WorkingShift> findByDateBetween(Date dateA, Date dateB);
 
+    @Query("{ 'date': { '$gte': ?0, '$lte': ?1 } }")
+    List<WorkingShift> findByDateBetweenInclusive(Date dateA, Date dateB);
+
     // Truy vấn WorkingShift theo staffId
     List<WorkingShift> findByListStaffContaining(String staffId);
 

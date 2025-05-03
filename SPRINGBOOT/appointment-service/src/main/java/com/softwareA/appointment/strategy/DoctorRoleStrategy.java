@@ -10,7 +10,7 @@ public class DoctorRoleStrategy implements AppointmentRoleFilterStrategy {
     @Override
     public GetAppointmentFilter applyRoleFilter(UUID userId, GetAppointmentsDTO dto) {
         return GetAppointmentFilter.builder()
-                .doctorIds(List.of(userId))
+                .doctorIds(List.of(String.valueOf(userId)))
                 .status(dto.getStatus() != null ? dto.getStatus().name() : null)
                 .build();
     }

@@ -9,6 +9,10 @@ spring:
       uri: mongodb+srv://aye10diemtoan0:3YuYOFfiujAFdZEc@cluster0.qsvbeha.mongodb.net/staff_db?retryWrites=true&w=majority&appName=Cluster0
       auto-index-creation: true
 
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+    org.springframework.data.mongodb.core.MongoOperations: DEBUG
 
 app:
   services:

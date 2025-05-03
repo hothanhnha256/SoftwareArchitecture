@@ -3,6 +3,7 @@ package com.softwareA.appointment.model.appointment;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.softwareA.appointment.model.patient.Patient;
 import com.softwareA.appointment.model.staff.Doctor;
 import com.softwareA.appointment.model.staff.Shift;
 import jakarta.persistence.*;
@@ -40,10 +41,13 @@ public class Appointment {
         updatedAt = createdAt;
         status = AppointmentStatus.WAITING;
     }
+
     @Transient
     Doctor doctor;
     @Transient
     Shift shift;
+    @Transient
+    Patient patient;
 
     @PreUpdate
     protected void onUpdate() {

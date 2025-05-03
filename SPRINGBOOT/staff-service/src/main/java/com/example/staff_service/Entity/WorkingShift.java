@@ -26,7 +26,7 @@ public class WorkingShift {
     @Id
     String id;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     Date date;
 
     int hours;

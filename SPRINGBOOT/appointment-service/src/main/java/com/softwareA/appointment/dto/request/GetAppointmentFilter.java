@@ -14,7 +14,7 @@ import java.util.UUID;
 @Builder
 public class GetAppointmentFilter {
     List<UUID> patientIds;
-    List<UUID> doctorIds;
+    List<String> doctorIds;
     List<String> shiftIds;
     String status;
 }

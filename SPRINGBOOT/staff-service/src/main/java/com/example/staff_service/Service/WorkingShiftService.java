@@ -14,6 +14,8 @@ import com.example.staff_service.Utils.DateUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
@@ -21,6 +23,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,6 +33,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class WorkingShiftService {
+    private static final Logger log = LoggerFactory.getLogger(WorkingShiftService.class);
     WorkingShiftRepository workingShiftRepository;
     StaffRepository staffRepository;
     MongoTemplate mongoTemplate;
@@ -41,11 +46,12 @@ public class WorkingShiftService {
         workingShift.setListStaff(staffIds);
         return workingShiftRepository.save(workingShift);
     }
+
     public List<WorkingShiftResponse> getWorkingShifts(String dateA, String dateB, String staffId) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date startDate = null;
         Date endDate = null;
-        if(staffId != null && staffRepository.findById(staffId).isEmpty()){
+        if (staffId != null && staffRepository.findById(staffId).isEmpty()) {
             throw new ResourceNotFoundException("Staff ID not found");
         }
         try {
@@ -62,7 +68,7 @@ public class WorkingShiftService {
         if (startDate != null && endDate != null && staffId != null) {
             workingShifts = workingShiftRepository.findByDateBetweenAndListStaffContaining(startDate, endDate, staffId);
         } else if (startDate != null && endDate != null) {
-            workingShifts = workingShiftRepository.findByDateBetween(startDate, endDate);
+            workingShifts = workingShiftRepository.findByDateBetweenInclusive(startDate, endDate);
         } else if (staffId != null) {
             workingShifts = workingShiftRepository.findByListStaffContaining(staffId);
         } else {
@@ -72,10 +78,12 @@ public class WorkingShiftService {
                 .map(shift -> new WorkingShiftResponse(shift.getId(), shift.getDate(), shift.getHours()))
                 .collect(Collectors.toList());
     }
+
     public WorkingShift getWorkingShiftById(String workingShiftId) {
         return workingShiftRepository.findById(workingShiftId)
                 .orElseThrow(() -> new ResourceNotFoundException("WorkingShift not found with id: " + workingShiftId));
     }
+
     public WorkingShift addStaffToWorkingShift(String workingShiftId, String staffId) {
         WorkingShift workingShift = workingShiftRepository.findById(workingShiftId)
                 .orElseThrow(() -> new ResourceNotFoundException("WorkingShift not found with id: " + workingShiftId));
@@ -87,6 +95,7 @@ public class WorkingShiftService {
         }
         return workingShiftRepository.save(workingShift);
     }
+
     public List<StaffResponse> getStaffsInWorkingShift(Date date, int hours, String departmentId) {
         Date[] range = DateUtils.getStartAndEndOfDay(date);
         Date start = range[0];
@@ -119,6 +128,8 @@ public class WorkingShiftService {
         Date[] range = DateUtils.getStartAndEndOfDay(date);
         Date start = range[0];
         Date end = range[1];
+        log.info(start.toString());
+        log.info(end.toString());
         Optional<WorkingShift> optionalWorkingShift = workingShiftRepository.findOneByDateRangeAndHours(start, end, hours);
 
         if (optionalWorkingShift.isPresent()) {

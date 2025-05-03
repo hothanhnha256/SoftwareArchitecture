@@ -22,7 +22,7 @@ public class AppointmentSpecification {
                 predicates.add(root.get("doctorId").in(filter.getDoctorIds()));
             }
 
-            if (filter.getShiftIds() != null && !filter.getShiftIds().isEmpty()) {
+            if (filter.getShiftIds() != null) {
                 predicates.add(root.get("shiftId").in(filter.getShiftIds()));
             }
 
