@@ -50,7 +50,7 @@ public class MedicalOrderService {
             throw new AppException(ErrorCode.FORBIDDEN, "You are not authorized to create a medical order");
         }
         // CHECK IF PATIENT EXISTS
-        if (patientValidator.patientExists(dto.getPatientId())) {
+        if (!patientValidator.patientExists(dto.getPatientId())) {
             throw new AppException(ErrorCode.PATIENT_NOT_FOUND, "Patient not found");
         }
         List<MedicalOrder_OrderItem> items = new ArrayList<>();
