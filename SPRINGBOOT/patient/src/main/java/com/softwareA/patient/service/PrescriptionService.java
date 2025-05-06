@@ -5,16 +5,20 @@ import com.softwareA.patient.client.StaffClient;
 import com.softwareA.patient.dto.Staff;
 import com.softwareA.patient.dto.request.CreatePrescriptionRequest;
 import com.softwareA.patient.dto.request.MedicationRequest;
+import com.softwareA.patient.dto.response.PatientGeneralDTO;
 import com.softwareA.patient.dto.response.PrescriptionResponse;
 import com.softwareA.patient.exception.AppException;
 import com.softwareA.patient.exception.ErrorCode;
+import com.softwareA.patient.mapper.PatientMapper;
 import com.softwareA.patient.mapper.PrescriptionMapper;
 import com.softwareA.patient.model.Medication;
 import com.softwareA.patient.model.auth.AuthInfo;
 import com.softwareA.patient.model.medical_order.MedicalOrder;
+import com.softwareA.patient.model.patient.Patient;
 import com.softwareA.patient.model.prescription.Prescription;
 import com.softwareA.patient.model.prescription.Prescription_Medication;
 import com.softwareA.patient.repository.MedicalOrderRepository;
+import com.softwareA.patient.repository.PatientRepository;
 import com.softwareA.patient.repository.PrescriptionRepository;
 import com.softwareA.patient.repository.Prescription_MedicationRepository;
 import com.softwareA.patient.service.validator.MedicalOrderValidator;
@@ -38,6 +42,8 @@ public class PrescriptionService {
     private static final Logger log = LoggerFactory.getLogger(PrescriptionService.class);
     private final PrescriptionRepository prescriptionRepository;
     private final MedicalOrderRepository medicalOrderRepository;
+    private final PatientRepository patientRepository;
+    private final PatientMapper patientMapper;
     private final Prescription_MedicationRepository prescription_medicationRepository;
     private final MedicalOrderValidator medicalOrderValidator;
     private final PrescriptionValidator prescriptionValidator;
@@ -115,9 +121,21 @@ public class PrescriptionService {
         // enrich medication info
         medications = medicationService.enrichMedicationInfos(medications);
         response.setMedications(medications);
+        // add patient info to prescription
+        response.setPatient(getPatientOfPrescription(presciptionOptional.get()));
         // add doctor info to prescription
         response.setDoctor(staffService.getDoctorById(response.getDoctorId()));
         return response;
+    }
+
+    private PatientGeneralDTO getPatientOfPrescription(Prescription prescription) {
+        Optional<MedicalOrder> medicalOrder = medicalOrderRepository.findById(prescription.getMedicalOrderId());
+        if (medicalOrder.isEmpty()) {
+            return null;
+        }
+        Optional<Patient> patient = patientRepository.findById(medicalOrder.get().getPatientId());
+        return patient.map(patientMapper::toGeneralDTO).orElse(null);
+
     }
 
     public List<Prescription> getPrescriptions(AuthInfo authInfo) {

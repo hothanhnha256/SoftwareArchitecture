@@ -5,12 +5,16 @@ import com.softwareA.appointment.dto.request.GetAppointmentsDTO;
 import com.softwareA.appointment.dto.request.GetAvailableDoctorsDTO;
 import com.softwareA.appointment.dto.request.UpdateAppointmentDTO;
 import com.softwareA.appointment.dto.response.AppointmentDetailDTO;
+import com.softwareA.appointment.dto.response.AvailableScheduleResponse;
 import com.softwareA.appointment.exception.AppException;
 import com.softwareA.appointment.exception.ErrorCode;
 import com.softwareA.appointment.model.Department;
 import com.softwareA.appointment.model.appointment.Appointment;
 import com.softwareA.appointment.model.staff.Doctor;
+import com.softwareA.appointment.model.staff.Shift;
 import com.softwareA.appointment.service.AppointmentService;
+import com.softwareA.appointment.service.IShiftService;
+import com.softwareA.appointment.service.IStaffService;
 import com.softwareA.patient.dto.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +35,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AppointmentController {
     private final AppointmentService appointmentService;
+    private final IShiftService shiftService;
 
     @GetMapping("/test-patient-feign")
     public String testFeign() {
@@ -46,13 +51,17 @@ public class AppointmentController {
     }
 
     @GetMapping("/available-doctors")
-    public ResponseEntity<ApiResponse<List<Doctor>>> getAvailableSchedules(@ModelAttribute GetAvailableDoctorsDTO dto,
-                                                                           @PageableDefault(size = 15, page = 0) Pageable pageable) {
+    public ResponseEntity<ApiResponse<AvailableScheduleResponse>> getAvailableSchedules(@ModelAttribute GetAvailableDoctorsDTO dto,
+                                                                                        @PageableDefault(size = 15, page = 0) Pageable pageable) {
         log.info("getAvailableDoctors");
         // TÌM 1 LIST DOCTOR dựa trên khoa khám + ngày khám (shift)
         List<Doctor> doctors = this.appointmentService.getAvailableDoctors(dto, pageable);
-        return ResponseEntity.ok().body(ApiResponse.<List<Doctor>>builder()
-                .result(doctors)
+        Shift shift = shiftService.getShiftByDateAndTime(dto.getDate().toString(), dto.getHour());
+        AvailableScheduleResponse availableScheduleResponse = new AvailableScheduleResponse();
+        availableScheduleResponse.setDoctors(doctors);
+        availableScheduleResponse.setShift(shift);
+        return ResponseEntity.ok().body(ApiResponse.<AvailableScheduleResponse>builder()
+                .result(availableScheduleResponse)
                 .build());
     }
 

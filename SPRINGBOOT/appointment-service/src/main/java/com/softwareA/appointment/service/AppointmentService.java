@@ -182,6 +182,10 @@ public class AppointmentService {
     }
 
     public List<Doctor> getAvailableDoctors(GetAvailableDoctorsDTO dto, Pageable pageable) {
+
+        // validate requested schedule datetime
+        dto.validateDateRange();
+
         ApiResponse<List<Doctor>> doctorResponse = null;
         try {
             doctorResponse = this.staffClient.getAvailableDoctors(dto.getDepartmentId(), "DOCTOR");

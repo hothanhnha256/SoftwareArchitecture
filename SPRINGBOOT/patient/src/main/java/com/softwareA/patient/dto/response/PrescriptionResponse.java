@@ -1,6 +1,7 @@
 package com.softwareA.patient.dto.response;
 
 import com.softwareA.patient.dto.Staff;
+import com.softwareA.patient.model.patient.Patient;
 import com.softwareA.patient.model.prescription.PrescriptionStatus;
 import com.softwareA.patient.model.prescription.Prescription_Medication;
 import lombok.Builder;
@@ -20,4 +21,5 @@ public class PrescriptionResponse {
     LocalDateTime createdAt;
     List<Prescription_Medication> medications;
     Staff doctor;
+    PatientGeneralDTO patient;
 }
