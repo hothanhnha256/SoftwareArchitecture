@@ -17,7 +17,7 @@ public class DoctorUpdateAppointmentStrategy implements AppointmentUpdateStrateg
 
     @Override
     public Appointment update(Appointment appointment, UpdateAppointmentDTO dto, UUID userId) {
-        if (!appointment.getDoctorId().equals(userId)) {
+        if (!appointment.getDoctorId().equals(userId.toString())) {
             throw new AppException(ErrorCode.FORBIDDEN, "You are not allowed to update this appointment");
         }
 
